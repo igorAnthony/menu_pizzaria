@@ -1,4 +1,5 @@
 
+import java.awt.Color;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionEvent;
@@ -42,7 +43,7 @@ public class VendaPizza extends javax.swing.JFrame {
                 });
             }
         }
-        
+       getContentPane().setBackground(Color.DARK_GRAY);
         
     }
     
@@ -68,7 +69,6 @@ public class VendaPizza extends javax.swing.JFrame {
         btn_reset = new javax.swing.JButton();
         btn_Sair = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -127,15 +127,26 @@ public class VendaPizza extends javax.swing.JFrame {
         xSaborCheckBox16 = new javax.swing.JCheckBox();
         xSaborCheckBox17 = new javax.swing.JCheckBox();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(0, 0, 0));
         setForeground(java.awt.Color.black);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setBackground(new java.awt.Color(90, 90, 90));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
 
+        bordaCheck.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        bordaCheck.setForeground(new java.awt.Color(255, 102, 0));
         bordaCheck.setText("Mussarela com oregano");
         bordaCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,6 +154,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        bordaCheck2.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        bordaCheck2.setForeground(new java.awt.Color(255, 102, 0));
         bordaCheck2.setText("Catupiry");
         bordaCheck2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,6 +163,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        bordaCheck3.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        bordaCheck3.setForeground(new java.awt.Color(255, 102, 0));
         bordaCheck3.setText("Chocolate");
         bordaCheck3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -157,6 +172,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        bordaCheck4.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        bordaCheck4.setForeground(new java.awt.Color(255, 102, 0));
         bordaCheck4.setText("Cheddar");
         bordaCheck4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -171,30 +188,37 @@ public class VendaPizza extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bordaCheck2)
                     .addComponent(bordaCheck)
+                    .addComponent(bordaCheck2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bordaCheck3)
                     .addComponent(bordaCheck4))
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(bordaCheck)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bordaCheck)
+                    .addComponent(bordaCheck4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bordaCheck2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bordaCheck3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bordaCheck4)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bordaCheck2)
+                    .addComponent(bordaCheck3))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel4.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 102, 0));
         jLabel4.setText("Total ");
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel3.setBackground(new java.awt.Color(90, 90, 90));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 51)));
 
+        btn_Calcular.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        btn_Calcular.setForeground(new java.awt.Color(255, 102, 0));
         btn_Calcular.setText("Calcular");
         btn_Calcular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -202,6 +226,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        btn_reset.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        btn_reset.setForeground(new java.awt.Color(255, 102, 0));
         btn_reset.setText("Reset");
         btn_reset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,6 +235,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        btn_Sair.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        btn_Sair.setForeground(new java.awt.Color(255, 102, 0));
         btn_Sair.setText("Sair");
         btn_Sair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -220,100 +248,127 @@ public class VendaPizza extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_Calcular)
-                .addGap(18, 18, 18)
-                .addComponent(btn_reset, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btn_Sair, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_reset, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_Sair, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_reset)
-                    .addComponent(btn_Calcular)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_Calcular)
+                        .addComponent(btn_reset))
                     .addComponent(btn_Sair))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setText("Disk Pizza Leão");
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 119, 26));
         jLabel3.setText("Sabores Doces");
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel3.setMaximumSize(new java.awt.Dimension(50, 16));
         jLabel3.setMinimumSize(new java.awt.Dimension(50, 16));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 102, 0));
         jLabel1.setText("Tamanho");
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel4.setBackground(new java.awt.Color(90, 90, 90));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
 
         jScrollPane7.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane7.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea7.setEditable(false);
+        jTextArea7.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea7.setColumns(20);
+        jTextArea7.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea7.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea7.setRows(5);
-        jTextArea7.setText("Mussarela, leite condensado e paçoca");
+        jTextArea7.setText("Mussarela, leite condensado \ne paçoca");
         jTextArea7.setBorder(null);
+        jTextArea7.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane7.setViewportView(jTextArea7);
 
         jScrollPane8.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane8.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea8.setEditable(false);
+        jTextArea8.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea8.setColumns(20);
+        jTextArea8.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea8.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea8.setRows(5);
-        jTextArea8.setText("Mussarela, leite condensado, \nchocolate branco, morango e creme de\nleite");
+        jTextArea8.setText("Mussarela, leite condensado, \nchocolate branco, morango e \ncreme de leite");
         jTextArea8.setBorder(null);
+        jTextArea8.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane8.setViewportView(jTextArea8);
 
         jScrollPane9.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane9.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea9.setEditable(false);
+        jTextArea9.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea9.setColumns(20);
+        jTextArea9.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea9.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea9.setRows(5);
-        jTextArea9.setText("Mussarela, leite condensado, \nchocolate preto, morango e creme de\nleite");
+        jTextArea9.setText("Mussarela, leite condensado, \nchocolate preto, morango e \ncreme de leite");
         jTextArea9.setBorder(null);
+        jTextArea9.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane9.setViewportView(jTextArea9);
 
         jScrollPane10.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane10.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea10.setEditable(false);
+        jTextArea10.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea10.setColumns(20);
+        jTextArea10.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea10.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea10.setRows(5);
         jTextArea10.setText("Mussarela, leite condensado, \nchocolate preto e coco");
         jTextArea10.setBorder(null);
+        jTextArea10.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane10.setViewportView(jTextArea10);
 
         jScrollPane11.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane11.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea11.setEditable(false);
+        jTextArea11.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea11.setColumns(20);
+        jTextArea11.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea11.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea11.setRows(5);
         jTextArea11.setText("Mussarela, leite condensado, \nchocolate preto e cerejas");
         jTextArea11.setBorder(null);
+        jTextArea11.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane11.setViewportView(jTextArea11);
 
         jScrollPane12.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane12.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea12.setEditable(false);
+        jTextArea12.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea12.setColumns(20);
+        jTextArea12.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea12.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea12.setRows(5);
-        jTextArea12.setText("Mussarela, leite condensado, \nchocolate branco, granulado colorido");
+        jTextArea12.setText("Mussarela, leite condensado, \nchocolate branco, granulado \ncolorido");
         jTextArea12.setBorder(null);
+        jTextArea12.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane12.setViewportView(jTextArea12);
 
+        xSaborCheckBox.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox.setText("Sedução");
         xSaborCheckBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -321,6 +376,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox1.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox1.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox1.setText("Paçoquita da neide");
         xSaborCheckBox1.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -328,6 +385,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox2.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox2.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox2.setText("Sensação");
         xSaborCheckBox2.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -335,6 +394,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox3.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox3.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox3.setText("Prestígio");
         xSaborCheckBox3.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -342,6 +403,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox4.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox4.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox4.setText("Floresta Negra");
         xSaborCheckBox4.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -349,6 +412,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox5.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox5.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox5.setText("Carnaval");
         xSaborCheckBox5.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -360,62 +425,88 @@ public class VendaPizza extends javax.swing.JFrame {
         jScrollPane13.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea13.setEditable(false);
+        jTextArea13.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea13.setColumns(20);
+        jTextArea13.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea13.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea13.setRows(5);
-        jTextArea13.setText("Molho de tomate especial, mussarela,\nstrogonoff de carne, orégano e batata\npalha");
+        jTextArea13.setText("Molho de tomate especial, mussarela,\nstrogonoff de carne, orégano e\nbatata palha");
         jTextArea13.setBorder(null);
+        jTextArea13.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane13.setViewportView(jTextArea13);
 
         jScrollPane14.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane14.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea14.setEditable(false);
+        jTextArea14.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea14.setColumns(20);
+        jTextArea14.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea14.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea14.setRows(5);
-        jTextArea14.setText("Molho de tomate especial, mussarela,\ncalabresa e orégano");
+        jTextArea14.setText("Molho de tomate especial, \nmussarela, calabresa e orégano");
         jTextArea14.setBorder(null);
+        jTextArea14.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane14.setViewportView(jTextArea14);
 
         jScrollPane15.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane15.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea15.setEditable(false);
+        jTextArea15.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea15.setColumns(20);
+        jTextArea15.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea15.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea15.setRows(5);
-        jTextArea15.setText("Molho de tomate especial, mussarela,\nfrango, catupiry e orégano");
+        jTextArea15.setText("Molho de tomate especial, \nmussarela, frango, catupiry \ne orégano");
         jTextArea15.setBorder(null);
+        jTextArea15.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane15.setViewportView(jTextArea15);
 
         jScrollPane16.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane16.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea16.setEditable(false);
+        jTextArea16.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea16.setColumns(20);
+        jTextArea16.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea16.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea16.setRows(5);
-        jTextArea16.setText("Molho de tomate especial, mussarela,\npresunto, ovo, cebola, tomate, pimentão,\nazeitona e orégano");
+        jTextArea16.setText("Molho de tomate especial, mussarela,\npresunto, ovo, cebola, tomate, \npimentão, azeitona e orégano");
         jTextArea16.setBorder(null);
+        jTextArea16.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane16.setViewportView(jTextArea16);
 
         jScrollPane17.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane17.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea17.setEditable(false);
+        jTextArea17.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea17.setColumns(20);
+        jTextArea17.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea17.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea17.setRows(5);
-        jTextArea17.setText("Molho de tomate especial, mussarela,\nfilé mignon, catupiry e orégano");
+        jTextArea17.setText("Molho de tomate especial, \nmussarela, filé mignon, \ncatupiry e orégano");
         jTextArea17.setBorder(null);
+        jTextArea17.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane17.setViewportView(jTextArea17);
 
         jScrollPane18.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane18.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea18.setEditable(false);
+        jTextArea18.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea18.setColumns(20);
+        jTextArea18.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea18.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea18.setRows(5);
         jTextArea18.setText("Molho de tomate especial, mussarela,\nsalame italiano, tomate, cebola, azeitona\ne orégano");
         jTextArea18.setBorder(null);
+        jTextArea18.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane18.setViewportView(jTextArea18);
 
+        xSaborCheckBox6.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox6.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox6.setText("Calabresa");
         xSaborCheckBox6.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -423,6 +514,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox7.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox7.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox7.setText("Strogonoff");
         xSaborCheckBox7.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -430,6 +523,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox8.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox8.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox8.setText("Frango catupiry");
         xSaborCheckBox8.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -437,6 +532,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox9.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox9.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox9.setText("Portuguesa");
         xSaborCheckBox9.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -444,6 +541,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox10.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox10.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox10.setText("Catufilé");
         xSaborCheckBox10.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -451,6 +550,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox11.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox11.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox11.setText("Italiana");
         xSaborCheckBox11.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -462,62 +563,88 @@ public class VendaPizza extends javax.swing.JFrame {
         jScrollPane19.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea19.setEditable(false);
+        jTextArea19.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea19.setColumns(20);
+        jTextArea19.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea19.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea19.setRows(5);
-        jTextArea19.setText("Molho de tomate especial, mussarela,\ncamarão ao molho, champignon, milho,\nazeitona e orégano");
+        jTextArea19.setText("Molho de tomate especial, \nmussarela,camarão ao molho, \nchampignon, milho,azeitona e \norégano");
         jTextArea19.setBorder(null);
+        jTextArea19.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane19.setViewportView(jTextArea19);
 
         jScrollPane20.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane20.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea20.setEditable(false);
+        jTextArea20.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea20.setColumns(20);
+        jTextArea20.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea20.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea20.setRows(5);
-        jTextArea20.setText("Molho de tomate especial, mussarela,\nfilezinho da picanha, cebola, azeitona,\n catupiry, bacon em fatias e orégano");
+        jTextArea20.setText("Molho de tomate especial, mussarela,\nfilezinho da picanha, cebola, \nazeitona, catupiry, bacon em \nfatias e orégano");
         jTextArea20.setBorder(null);
+        jTextArea20.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane20.setViewportView(jTextArea20);
 
         jScrollPane21.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane21.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea21.setEditable(false);
+        jTextArea21.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea21.setColumns(20);
+        jTextArea21.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea21.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea21.setRows(5);
-        jTextArea21.setText("Molho de tomate especial, mussarela,\nlinguiça assada, pimenta, calabresa, \ncebola, pimentão azeitona e orégano");
+        jTextArea21.setText("Molho de tomate especial, \nmussarela,linguiça assada, \npimenta, calabresa, cebola, \npimentão azeitona e orégano");
         jTextArea21.setBorder(null);
+        jTextArea21.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane21.setViewportView(jTextArea21);
 
         jScrollPane22.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane22.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea22.setEditable(false);
+        jTextArea22.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea22.setColumns(20);
+        jTextArea22.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea22.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea22.setRows(5);
-        jTextArea22.setText("Molho de tomate especial, mussarela,\nfatias de ponta de peito, champignon, \ntomate em fatias e orégano");
+        jTextArea22.setText("Molho de tomate especial, \nmussarela, fatias de ponta de \npeito, champignon, tomate em \nfatias e orégano");
         jTextArea22.setBorder(null);
+        jTextArea22.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane22.setViewportView(jTextArea22);
 
         jScrollPane23.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane23.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea23.setEditable(false);
+        jTextArea23.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea23.setColumns(20);
+        jTextArea23.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea23.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea23.setRows(5);
-        jTextArea23.setText("Molho de tomate especial, mussarela e\nquatro ingredientes a preferência do \ncliente");
+        jTextArea23.setText("Molho de tomate especial, \nmussarela e quatro ingredientes\na preferência do cliente");
         jTextArea23.setBorder(null);
+        jTextArea23.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane23.setViewportView(jTextArea23);
 
         jScrollPane24.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane24.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         jTextArea24.setEditable(false);
+        jTextArea24.setBackground(new java.awt.Color(90, 90, 90));
         jTextArea24.setColumns(20);
+        jTextArea24.setFont(new java.awt.Font("Cascadia Code", 0, 10)); // NOI18N
+        jTextArea24.setForeground(new java.awt.Color(255, 102, 0));
         jTextArea24.setRows(5);
-        jTextArea24.setText("Molho de tomate especial, mussarela,\nfilezinho de picanha ao alho e cebola");
+        jTextArea24.setText("Molho de tomate especial, \nmussarela, filezinho de picanha\nao alho e cebola");
         jTextArea24.setBorder(null);
+        jTextArea24.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane24.setViewportView(jTextArea24);
 
+        xSaborCheckBox12.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox12.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox12.setText("A moda da casa");
         xSaborCheckBox12.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -525,6 +652,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox13.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox13.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox13.setText("Camarão");
         xSaborCheckBox13.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -532,6 +661,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox14.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox14.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox14.setText("Baiana do beto");
         xSaborCheckBox14.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -539,6 +670,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox15.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox15.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox15.setText("Ponta de Peito");
         xSaborCheckBox15.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -546,6 +679,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox16.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox16.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox16.setText("Sabor do Cliente");
         xSaborCheckBox16.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -553,6 +688,8 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        xSaborCheckBox17.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        xSaborCheckBox17.setForeground(new java.awt.Color(255, 102, 0));
         xSaborCheckBox17.setText("Tudo de bom");
         xSaborCheckBox17.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -565,30 +702,21 @@ public class VendaPizza extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(xSaborCheckBox)
-                            .addComponent(xSaborCheckBox2)
-                            .addComponent(xSaborCheckBox4)
-                            .addComponent(xSaborCheckBox5)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(xSaborCheckBox3))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(xSaborCheckBox1)))
-                .addGap(34, 34, 34)
+                .addGap(50, 50, 50)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(xSaborCheckBox)
+                    .addComponent(xSaborCheckBox2)
+                    .addComponent(xSaborCheckBox4)
+                    .addComponent(xSaborCheckBox5)
+                    .addComponent(xSaborCheckBox3)
+                    .addComponent(xSaborCheckBox1)
+                    .addComponent(jScrollPane12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                    .addComponent(jScrollPane11, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane9)
+                    .addComponent(jScrollPane8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -599,28 +727,29 @@ public class VendaPizza extends javax.swing.JFrame {
                             .addComponent(xSaborCheckBox9)
                             .addComponent(xSaborCheckBox7)
                             .addComponent(jScrollPane15, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane16, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jScrollPane18, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                .addGap(102, 102, 102)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel4Layout.createSequentialGroup()
                             .addComponent(xSaborCheckBox12)
-                            .addComponent(xSaborCheckBox14)
-                            .addComponent(xSaborCheckBox16)
-                            .addComponent(xSaborCheckBox17)
-                            .addComponent(xSaborCheckBox15)
-                            .addComponent(xSaborCheckBox13)
-                            .addComponent(jScrollPane21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane20, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(41, 41, 41))
+                            .addGap(100, 100, 100))
+                        .addComponent(jScrollPane24, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane20, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(xSaborCheckBox14)
+                    .addComponent(jScrollPane21, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(xSaborCheckBox15)
+                    .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(xSaborCheckBox13)
+                    .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(xSaborCheckBox16)
+                    .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(xSaborCheckBox17))
+                .addGap(58, 58, 58))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -628,95 +757,99 @@ public class VendaPizza extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(xSaborCheckBox6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(xSaborCheckBox8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane15, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(xSaborCheckBox9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane16, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(xSaborCheckBox7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(7, 7, 7)
+                                .addComponent(xSaborCheckBox10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(xSaborCheckBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13)
+                                .addComponent(xSaborCheckBox2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(12, 12, 12)
+                                .addComponent(xSaborCheckBox3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(xSaborCheckBox1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(xSaborCheckBox4)
+                                .addGap(7, 7, 7)
+                                .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(xSaborCheckBox5)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(xSaborCheckBox11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane18, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(xSaborCheckBox12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane20, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane20, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(xSaborCheckBox14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane21, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane21, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(xSaborCheckBox15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(xSaborCheckBox13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(xSaborCheckBox16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(xSaborCheckBox17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(xSaborCheckBox6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(xSaborCheckBox8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane15, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(xSaborCheckBox9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane16, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(xSaborCheckBox7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(7, 7, 7)
-                        .addComponent(xSaborCheckBox10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(xSaborCheckBox11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane18, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(xSaborCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addComponent(xSaborCheckBox2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(xSaborCheckBox3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(xSaborCheckBox1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(xSaborCheckBox4)
-                        .addGap(7, 7, 7)
-                        .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(xSaborCheckBox5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 119, 26));
         jLabel6.setText("Sabores Tradicionais");
         jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel6.setMaximumSize(new java.awt.Dimension(50, 16));
         jLabel6.setMinimumSize(new java.awt.Dimension(50, 16));
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel7.setText("Bordas");
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 119, 26));
         jLabel8.setText("Sabores Especiais");
         jLabel8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel8.setMaximumSize(new java.awt.Dimension(50, 16));
         jLabel8.setMinimumSize(new java.awt.Dimension(50, 16));
 
+        jComboBox1.setFont(new java.awt.Font("Cascadia Code", 0, 12)); // NOI18N
+        jComboBox1.setForeground(new java.awt.Color(255, 102, 0));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pequena: 1 sabor, 8 fatias e 25cm R$ 20,00", "Média: 2 sabores, 12 fatias R$ 37,00", "Grande: 3 sabores, 16 fatias R$ 47,00", "Grande familia: 4 sabores, 20 fatias R$ 67,00", "Big: 4 sabores, 24 fatias R$ 82,00", "Big retangular: 4 sabores, 32 fatias R$ 77,00" }));
         jComboBox1.setSelectedItem(-1);
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -725,83 +858,147 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/logo (1).png"))); // NOI18N
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/pizza.png"))); // NOI18N
+
+        jLabel10.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("CARDAPIO");
+
+        jLabel11.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/whatsapp.png"))); // NOI18N
+        jLabel11.setText("(45) 99916-5347");
+
+        jLabel12.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Delivery");
+
+        jLabel13.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/insta.png"))); // NOI18N
+        jLabel13.setText("@diskpizzaleao");
+
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/cartao.png"))); // NOI18N
+
+        jLabel7.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel7.setText("Bordas");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(94, 94, 94)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(148, 148, 148)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(200, 200, 200)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(542, 542, 542)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(43, 43, 43)
+                .addContainerGap(48, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(128, 128, 128)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(103, 103, 103)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(116, 116, 116))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(28, 28, 28)
+                                    .addComponent(jLabel2)
+                                    .addGap(73, 73, 73)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel12)
+                                            .addGap(64, 64, 64))
+                                        .addComponent(jLabel14)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel13)
+                                            .addComponent(jLabel11)))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(jLabel4)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(txf_Total, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(85, 85, 85))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(20, 20, 20)))))
+                            .addGap(41, 41, 41)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(410, 410, 410)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txf_Total, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(41, 41, 41))
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(132, 132, 132))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(112, 112, 112)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(82, 82, 82)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(150, 150, 150)
+                                        .addComponent(jLabel1))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(243, 243, 243)
+                                .addComponent(jLabel7)))
+                        .addGap(38, 38, 38)))
                 .addComponent(jLabel5)
-                .addGap(76, 76, 76))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(64, 64, 64)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel10))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel11)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(150, 150, 150)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(4, 4, 4)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txf_Total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))))
-                        .addGap(0, 37, Short.MAX_VALUE)))
-                .addContainerGap())
+                                    .addComponent(jLabel4))))))
+                .addGap(9, 9, 9))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -846,7 +1043,9 @@ public class VendaPizza extends javax.swing.JFrame {
                 total = total + 77.00;
                 break;
         }
-
+        if(bordaCheck.isSelected() || bordaCheck2.isSelected() || bordaCheck3.isSelected() || bordaCheck4.isSelected()){
+            total += 10;
+        }
         txf_Total.setText(Double.toString(total));
 
 
@@ -856,6 +1055,11 @@ public class VendaPizza extends javax.swing.JFrame {
         bordaCheck.setSelected(false);
         bordaCheck3.setSelected(false);
         bordaCheck2.setSelected(false);
+        bordaCheck4.setSelected(false);
+        for (JCheckBox checkbox : checkboxList) {
+            checkbox.setSelected(false);
+        }
+        jComboBox1.setSelectedIndex(0);
         txf_Total.setText("");
     }//GEN-LAST:event_btn_resetActionPerformed
 
@@ -928,7 +1132,6 @@ public class VendaPizza extends javax.swing.JFrame {
             }
             // Adicione mais linhas para desabilitar as demais checkboxes
         }
-        txf_Total.setText(String.valueOf(limit));
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void xSaborCheckBox2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_xSaborCheckBox2ItemStateChanged
@@ -1161,6 +1364,11 @@ public class VendaPizza extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1168,6 +1376,7 @@ public class VendaPizza extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
