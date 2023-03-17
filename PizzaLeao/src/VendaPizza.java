@@ -2,13 +2,11 @@
 import java.awt.Color;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Component;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -213,6 +211,9 @@ public class VendaPizza extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 102, 0));
         jLabel4.setText("Total ");
+
+        txf_Total.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        txf_Total.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         jPanel3.setBackground(new java.awt.Color(90, 90, 90));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 51)));
@@ -919,13 +920,13 @@ public class VendaPizza extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(20, 20, 20))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                             .addComponent(jLabel4)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txf_Total, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(85, 85, 85))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(20, 20, 20)))))
+                                            .addComponent(txf_Total, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(72, 72, 72)))))
                             .addGap(41, 41, 41)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(410, 410, 410)
@@ -968,10 +969,11 @@ public class VendaPizza extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -984,18 +986,18 @@ public class VendaPizza extends javax.swing.JFrame {
                                 .addComponent(jLabel11)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel13)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
+                                .addGap(23, 23, 23)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txf_Total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel4))))))
-                .addGap(9, 9, 9))
+                .addGap(11, 11, 11))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1020,37 +1022,6 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         }
     }
-    private void btn_CalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CalcularActionPerformed
-        double total = 0;
-
-        switch (jComboBox1.getSelectedIndex()) {
-            case 0:
-                total = total + 20.00;
-                break;
-            case 1:
-                total = total + 37.00;
-                break;
-            case 2:
-                total = total + 47.00;
-                break;
-            case 3:
-                total = total + 67.00;
-                break;
-            case 4:
-                total = total + 82.00;
-                break;
-            case 5:
-                total = total + 77.00;
-                break;
-        }
-        if(bordaCheck.isSelected() || bordaCheck2.isSelected() || bordaCheck3.isSelected() || bordaCheck4.isSelected()){
-            total += 10;
-        }
-        txf_Total.setText(Double.toString(total));
-
-
-    }//GEN-LAST:event_btn_CalcularActionPerformed
-
     private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
         bordaCheck.setSelected(false);
         bordaCheck3.setSelected(false);
@@ -1090,7 +1061,11 @@ public class VendaPizza extends javax.swing.JFrame {
             bordaCheck2.setSelected(false);
         }
     }//GEN-LAST:event_bordaCheck4ActionPerformed
-
+    /*Um ouvinte de eventos (ou "listener" de eventos) é uma interface em programação que permite que o programa seja notificado 
+    quando ocorre um evento em um componente, como um clique do mouse, uma mudança no estado de um objeto ou uma entrada de teclado.
+    Em Java Swing, por exemplo, quando um usuário interage com um componente da interface do usuário, 
+    como um botão ou um campo de texto, um evento é gerado. Os ouvintes de eventos são adicionados a esses componentes 
+    para "ouvir" esses eventos e executar uma ação ou realizar uma operação quando o evento ocorre.*/
     private void xSaborCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_xSaborCheckBoxItemStateChanged
         xSaborCheckBox.addItemListener(new ItemListener() {
             @Override
@@ -1316,6 +1291,71 @@ public class VendaPizza extends javax.swing.JFrame {
             bordaCheck2.setSelected(false);
         }
     }//GEN-LAST:event_bordaCheck3ActionPerformed
+
+    private void btn_CalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CalcularActionPerformed
+        double total = 0;
+        boolean isBordaCheck = false;
+        boolean isCheckSelected = false;
+        for (JCheckBox checkbox : checkboxList) {
+            if (checkbox.isSelected()) {
+                isCheckSelected = true;
+                break;
+            }
+        }
+        if(isCheckSelected){
+            if(bordaCheck.isSelected() || bordaCheck2.isSelected() || bordaCheck3.isSelected() || bordaCheck4.isSelected()){
+                isBordaCheck = true;
+            }
+            switch (jComboBox1.getSelectedIndex()) {
+                case 0:
+                    if(isBordaCheck){
+                        total += 23.00;
+                    }else{
+                        total += 20.00;
+                    }
+                    break;
+                case 1:
+                    if(isBordaCheck){
+                        total += 43.00;
+                    }else{
+                        total += 37.00;
+                    }
+                    break;
+                case 2:
+                    if(isBordaCheck){
+                        total += 54.00;
+                    }else{
+                        total += 47.00;
+                    }
+                    break;
+                case 3:
+                    if(isBordaCheck){
+                        total += 74.00;
+                    }else{
+                        total += 67.00;
+                    }
+                    break;
+                case 4:
+                    if(isBordaCheck){
+                        total += 92.00;
+                    }else{
+                        total += 82.00;
+                    }
+                    break;
+                case 5:
+                    if(isBordaCheck){
+                        total += 87.00;
+                    }else{
+                        total += 77.00;
+                    }
+                    break;
+            }
+            txf_Total.setText("R$"+String.format("%.2f", total));
+        }else{
+            txf_Total.setText("");
+            JOptionPane.showMessageDialog(this, "Para calcular, é necessário escolher pelo menos um sabor!", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btn_CalcularActionPerformed
 
     /**
      * @param args the command line arguments
