@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.awt.Component;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -56,10 +57,10 @@ public class VendaPizza extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
-        bordaCheck = new javax.swing.JCheckBox();
-        bordaCheck2 = new javax.swing.JCheckBox();
-        bordaCheck3 = new javax.swing.JCheckBox();
-        bordaCheck4 = new javax.swing.JCheckBox();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
         jLabel4 = new javax.swing.JLabel();
         txf_Total = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
@@ -143,41 +144,25 @@ public class VendaPizza extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(90, 90, 90));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
 
-        bordaCheck.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        bordaCheck.setForeground(new java.awt.Color(255, 102, 0));
-        bordaCheck.setText("Mussarela com oregano");
-        bordaCheck.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bordaCheckActionPerformed(evt);
-            }
-        });
+        buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        jRadioButton1.setForeground(new java.awt.Color(255, 102, 0));
+        jRadioButton1.setText("Cheddar");
 
-        bordaCheck2.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        bordaCheck2.setForeground(new java.awt.Color(255, 102, 0));
-        bordaCheck2.setText("Catupiry");
-        bordaCheck2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bordaCheck2ActionPerformed(evt);
-            }
-        });
+        buttonGroup1.add(jRadioButton2);
+        jRadioButton2.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        jRadioButton2.setForeground(new java.awt.Color(255, 102, 0));
+        jRadioButton2.setText("Mussarela com oregano");
 
-        bordaCheck3.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        bordaCheck3.setForeground(new java.awt.Color(255, 102, 0));
-        bordaCheck3.setText("Chocolate");
-        bordaCheck3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bordaCheck3ActionPerformed(evt);
-            }
-        });
+        buttonGroup1.add(jRadioButton3);
+        jRadioButton3.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        jRadioButton3.setForeground(new java.awt.Color(255, 102, 0));
+        jRadioButton3.setText("Chocolate");
 
-        bordaCheck4.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        bordaCheck4.setForeground(new java.awt.Color(255, 102, 0));
-        bordaCheck4.setText("Cheddar");
-        bordaCheck4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bordaCheck4ActionPerformed(evt);
-            }
-        });
+        buttonGroup1.add(jRadioButton4);
+        jRadioButton4.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        jRadioButton4.setForeground(new java.awt.Color(255, 102, 0));
+        jRadioButton4.setText("Nenhuma");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -186,12 +171,12 @@ public class VendaPizza extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bordaCheck)
-                    .addComponent(bordaCheck2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jRadioButton3))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bordaCheck3)
-                    .addComponent(bordaCheck4))
+                    .addComponent(jRadioButton4)
+                    .addComponent(jRadioButton2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -199,13 +184,13 @@ public class VendaPizza extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bordaCheck)
-                    .addComponent(bordaCheck4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jRadioButton2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bordaCheck2)
-                    .addComponent(bordaCheck3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jRadioButton3)
+                    .addComponent(jRadioButton4))
+                .addContainerGap())
         );
 
         jLabel4.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
@@ -934,20 +919,20 @@ public class VendaPizza extends javax.swing.JFrame {
                             .addComponent(jLabel10)
                             .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(82, 82, 82)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(150, 150, 150)
-                                        .addComponent(jLabel1))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(232, 232, 232)
+                                    .addComponent(jLabel1))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGap(82, 82, 82)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(243, 243, 243)
-                                .addComponent(jLabel7)))
-                        .addGap(38, 38, 38)))
+                                .addComponent(jLabel7))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(121, 121, 121)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jLabel5)
                 .addContainerGap())
         );
@@ -1023,10 +1008,10 @@ public class VendaPizza extends javax.swing.JFrame {
         }
     }
     private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
-        bordaCheck.setSelected(false);
-        bordaCheck3.setSelected(false);
-        bordaCheck2.setSelected(false);
-        bordaCheck4.setSelected(false);
+        jRadioButton1.setSelected(false);
+        jRadioButton2.setSelected(false);
+        jRadioButton3.setSelected(false);
+        jRadioButton4.setSelected(false);
         for (JCheckBox checkbox : checkboxList) {
             checkbox.setSelected(false);
         }
@@ -1037,30 +1022,6 @@ public class VendaPizza extends javax.swing.JFrame {
     private void btn_SairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SairActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btn_SairActionPerformed
-
-    private void bordaCheck2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bordaCheck2ActionPerformed
-        if(bordaCheck2.isSelected()){
-            bordaCheck4.setSelected(false);
-            bordaCheck3.setSelected(false);
-            bordaCheck.setSelected(false);
-        }
-    }//GEN-LAST:event_bordaCheck2ActionPerformed
-
-    private void bordaCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bordaCheckActionPerformed
-        if(bordaCheck.isSelected()){
-            bordaCheck4.setSelected(false);
-            bordaCheck3.setSelected(false);
-            bordaCheck2.setSelected(false);
-        }
-    }//GEN-LAST:event_bordaCheckActionPerformed
-
-    private void bordaCheck4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bordaCheck4ActionPerformed
-       if(bordaCheck4.isSelected()){
-            bordaCheck.setSelected(false);
-            bordaCheck3.setSelected(false);
-            bordaCheck2.setSelected(false);
-        }
-    }//GEN-LAST:event_bordaCheck4ActionPerformed
     /*Um ouvinte de eventos (ou "listener" de eventos) é uma interface em programação que permite que o programa seja notificado 
     quando ocorre um evento em um componente, como um clique do mouse, uma mudança no estado de um objeto ou uma entrada de teclado.
     Em Java Swing, por exemplo, quando um usuário interage com um componente da interface do usuário, 
@@ -1284,14 +1245,6 @@ public class VendaPizza extends javax.swing.JFrame {
         });
     }//GEN-LAST:event_xSaborCheckBox17ItemStateChanged
 
-    private void bordaCheck3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bordaCheck3ActionPerformed
-        if(bordaCheck3.isSelected()){
-            bordaCheck4.setSelected(false);
-            bordaCheck.setSelected(false);
-            bordaCheck2.setSelected(false);
-        }
-    }//GEN-LAST:event_bordaCheck3ActionPerformed
-
     private void btn_CalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CalcularActionPerformed
         double total = 0;
         boolean isBordaCheck = false;
@@ -1303,7 +1256,7 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         }
         if(isCheckSelected){
-            if(bordaCheck.isSelected() || bordaCheck2.isSelected() || bordaCheck3.isSelected() || bordaCheck4.isSelected()){
+            if(jRadioButton1.isSelected() || jRadioButton2.isSelected() || jRadioButton3.isSelected()){
                 isBordaCheck = true;
             }
             switch (jComboBox1.getSelectedIndex()) {
@@ -1394,10 +1347,6 @@ public class VendaPizza extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox bordaCheck;
-    private javax.swing.JCheckBox bordaCheck2;
-    private javax.swing.JCheckBox bordaCheck3;
-    private javax.swing.JCheckBox bordaCheck4;
     private javax.swing.JButton btn_Calcular;
     private javax.swing.JButton btn_Sair;
     private javax.swing.JButton btn_reset;
@@ -1420,6 +1369,10 @@ public class VendaPizza extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
