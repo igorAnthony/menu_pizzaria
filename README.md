@@ -7,6 +7,7 @@
 <p align="center">
     <img src="https://github.com/igorAnthony/trabalhoPOO/blob/main/PizzaLeao/menu1.png"/>
     <img src="https://github.com/igorAnthony/trabalhoPOO/blob/main/PizzaLeao/menu2.png"/>
+    Ao clicar em concluir o pedido, ele irá abrir um novo forms para preencher os dados do cliente:
     <img src="https://github.com/igorAnthony/trabalhoPOO/blob/main/PizzaLeao/dadosDoCliente.png"/>
 </p>
 
