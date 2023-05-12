@@ -14,7 +14,9 @@ import java.awt.Color;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import models.Endereco;
 import models.Pedido;
@@ -385,9 +387,9 @@ public class DadosDoCliente extends javax.swing.JFrame {
         try {
             NotaFiscal nf = new NotaFiscal(user.getId(), retornaIdEndereco(linha), valorTotal);
             request.inserirNotaFiscal(nf, pedidos);
-            JOptionPane.showMessageDialog(null, "Pedido Gerado com sucesso!");
-            VendaPizza principal = new VendaPizza(user);
-            principal.setVisible(true);
+            JOptionPane.showMessageDialog(null, "Pedido Gerado com sucesso!");        
+            // Fechar o formulário atual
+            this.dispose();
         } catch (SQLException ex) {
             ex.printStackTrace();
              JOptionPane.showMessageDialog(null, "Erro ao inserir no bd","Erro", JOptionPane.ERROR_MESSAGE);   

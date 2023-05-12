@@ -161,12 +161,14 @@ public class AuthForm extends javax.swing.JFrame {
             Request request = new Request();
             try {
                 User user = request.login(login, senha);
+                System.out.print(user);
                 if(user==null){
-                    JOptionPane.showMessageDialog(null, "Credenciais invalidass","Atenção", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Credenciais invalidas","Atenção", JOptionPane.WARNING_MESSAGE);
                     return;
+                }else{
+                    VendaPizza principal = new VendaPizza(user);
+                    principal.setVisible(true);
                 }
-                VendaPizza principal = new VendaPizza(user);
-                principal.setVisible(true);
                 this.dispose();  
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Erro ao realizar consulta no banco de dados ","Erro",JOptionPane.ERROR_MESSAGE);

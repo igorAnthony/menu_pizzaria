@@ -96,9 +96,10 @@ public class Request {
         ps.setString(1, email);
         ps.setString(2, senha);
         ResultSet rs =ps.executeQuery();
-        User user = new User();
+        User user = null;
         
         while (rs.next()) {
+            user = new User();
             user.setId(rs.getInt("id"));
             user.setNome(rs.getString("nome"));
             user.setEmail(rs.getString("email"));
