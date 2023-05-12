@@ -1,0 +1,25 @@
+CREATE TABLE usuario ( id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE, senha VARCHAR(255) NOT NULL, nivel ENUM('ADMIN', 'USER') NOT NULL );
+
+CREATE TABLE endereco ( id INT AUTO_INCREMENT PRIMARY KEY, rua VARCHAR(255) NOT NULL, cep VARCHAR(8) NOT NULL, bairro VARCHAR(255) NOT NULL, numero INT NOT NULL, id_usuario INT NOT NULL, FOREIGN KEY (id_usuario) REFERENCES usuario(id) );
+
+CREATE TABLE nota_fiscal (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  id_usuario INT NOT NULL,
+  id_endereco INT NOT NULL,
+  total DECIMAL(10,2),
+  CONSTRAINT fk_cliente FOREIGN KEY (id_usuario) REFERENCES usuario(id),
+  CONSTRAINT fk_endereco FOREIGN KEY (id_endereco) REFERENCES endereco(id)
+);
+
+CREATE TABLE pedido (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nota_fiscal_id INT NOT NULL,
+  tamanho VARCHAR(20),
+  sabores VARCHAR(255),
+  bebidas VARCHAR(255),
+  borda VARCHAR(255),
+  valor_total DECIMAL(10,2),
+  CONSTRAINT fk_nota_fiscal FOREIGN KEY (nota_fiscal_id) REFERENCES nota_fiscal(id)
+);
+
+INSERT INTO usuario (nome, email, senha, nivel) VALUES ('João da Silva', 'teste', '123456', 'USER');
