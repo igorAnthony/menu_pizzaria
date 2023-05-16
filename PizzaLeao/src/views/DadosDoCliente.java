@@ -9,14 +9,13 @@ package views;
  *
  * @author igora
  */
-import api.Request;
+import dao.ClienteDAO;
+import dao.PedidoDAO;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import models.Endereco;
 import models.Pedido;
@@ -28,13 +27,15 @@ public class DadosDoCliente extends javax.swing.JFrame {
      */
     private final User user;
     private final List<Pedido> pedidos;
-    private final Request request;
+    private final ClienteDAO clienteDAO;
+    private final PedidoDAO pedidoDAO;
     private List<Endereco> enderecos;
     
     public DadosDoCliente(User user, List<Pedido> pedidos) {
         this.user = user;
         this.pedidos = pedidos;
-        request = new Request();
+        clienteDAO = new ClienteDAO();
+        pedidoDAO = new PedidoDAO();
         initComponents();
         getContentPane().setBackground(Color.DARK_GRAY);
         atualizarTabela();
@@ -386,7 +387,7 @@ public class DadosDoCliente extends javax.swing.JFrame {
         }
         try {
             NotaFiscal nf = new NotaFiscal(user.getId(), retornaIdEndereco(linha), valorTotal);
-            request.inserirNotaFiscal(nf, pedidos);
+            pedidoDAO.inserirNotaFiscal(nf, pedidos);
             JOptionPane.showMessageDialog(null, "Pedido Gerado com sucesso!");        
             // Fechar o formulário atual
             this.dispose();
@@ -397,7 +398,7 @@ public class DadosDoCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_finalizarActionPerformed
     private void atualizarTabela() { 
         try {
-            enderecos = request.buscarPelaDescricao(tDescricaoBuscaPedido.getText(), user.getId());
+            enderecos = clienteDAO.buscaEnderecoPelaDescricao(tDescricaoBuscaPedido.getText(), user.getId());
 
             DefaultTableModel model = (DefaultTableModel) tabela1.getModel();
             model.setNumRows(0);

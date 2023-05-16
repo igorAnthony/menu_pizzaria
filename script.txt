@@ -1,25 +1,128 @@
 CREATE TABLE usuario ( id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE, senha VARCHAR(255) NOT NULL, nivel ENUM('ADMIN', 'USER') NOT NULL );
 
-CREATE TABLE endereco ( id INT AUTO_INCREMENT PRIMARY KEY, rua VARCHAR(255) NOT NULL, cep VARCHAR(8) NOT NULL, bairro VARCHAR(255) NOT NULL, numero INT NOT NULL, id_usuario INT NOT NULL, FOREIGN KEY (id_usuario) REFERENCES usuario(id) );
+CREATE TABLE cliente (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    telefone VARCHAR(20),
+    dataDeNascimento DATE
+);
+
+CREATE TABLE endereco ( id INT AUTO_INCREMENT PRIMARY KEY, rua VARCHAR(255) NOT NULL, cep VARCHAR(8) NOT NULL, bairro VARCHAR(255) NOT NULL, numero INT NOT NULL, id_cliente INT NOT NULL, FOREIGN KEY (id_cliente) REFERENCES cliente(id) );
+
+CREATE TABLE pizza (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100),
+  ingredientes VARCHAR(255),
+  tipo VARCHAR(50)
+);
 
 CREATE TABLE nota_fiscal (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  id_usuario INT NOT NULL,
+  id_cliente INT NOT NULL,
   id_endereco INT NOT NULL,
   total DECIMAL(10,2),
-  CONSTRAINT fk_cliente FOREIGN KEY (id_usuario) REFERENCES usuario(id),
+  data_venda DATE,
+  CONSTRAINT fk_cliente FOREIGN KEY (id_cliente) REFERENCES cliente(id),
   CONSTRAINT fk_endereco FOREIGN KEY (id_endereco) REFERENCES endereco(id)
 );
+
 
 CREATE TABLE pedido (
   id INT PRIMARY KEY AUTO_INCREMENT,
   nota_fiscal_id INT NOT NULL,
   tamanho VARCHAR(20),
-  sabores VARCHAR(255),
+  pizzas VARCHAR(255),
   bebidas VARCHAR(255),
   borda VARCHAR(255),
   valor_total DECIMAL(10,2),
   CONSTRAINT fk_nota_fiscal FOREIGN KEY (nota_fiscal_id) REFERENCES nota_fiscal(id)
 );
+CREATE TABLE fornecedor (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100) NOT NULL,
+  telefone VARCHAR(20) NOT NULL
+);
+CREATE TABLE despesa (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  id_fornecedor INT NOT NULL,
+  valor DECIMAL(10, 2) NOT NULL,
+  data_vencimento DATE NOT NULL,
+  data_pagto DATE NOT NULL,
+  descricao VARCHAR(200),
+  CONSTRAINT fk_fornecedor FOREIGN KEY (id_fornecedor) REFERENCES fornecedor(id)
+);
+
+INSERT INTO cliente (nome, telefone, dataDeNascimento)
+VALUES ('João Silva', '(11) 98765-4321', '1990-05-10');
+
+INSERT INTO cliente (nome, telefone, dataDeNascimento)
+VALUES ('Maria Souza', '(22) 99999-8888', '1985-09-15');
+
+INSERT INTO endereco (rua, cep, bairro, numero, id_cliente)
+VALUES ('Rua A', '12345678', 'Centro', 10, 1);
+
+INSERT INTO endereco (rua, cep, bairro, numero, id_cliente)
+VALUES ('Rua B', '98765432', 'Bairro X', 20, 1);
+
+INSERT INTO endereco (rua, cep, bairro, numero, id_cliente)
+VALUES ('Rua C', '54321876', 'Bairro Y', 30, 1);
+
+INSERT INTO endereco (rua, cep, bairro, numero, id_cliente)
+VALUES ('Rua D', '22222333', 'Bairro Z', 40, 2);
+
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Margherita', 'Molho de tomate, queijo mozarela, manjericão', 'TRADICIONAL');
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Calabresa', 'Molho de tomate, queijo mozarela, calabresa, cebola', 'TRADICIONAL');
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Quatro Queijos', 'Molho de tomate, queijo mozarela, queijo provolone, queijo gorgonzola, queijo parmesão', 'TRADICIONAL');
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Frango com Catupiry', 'Molho de tomate, queijo mozarela, frango desfiado, catupiry', 'TRADICIONAL');
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Portuguesa', 'Molho de tomate, queijo mozarela, presunto, cebola, ovo cozido, azeitonas, ervilha', 'TRADICIONAL');
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Margherita de Bufala', 'Molho de tomate, queijo de bufala, manjericão', 'ESPECIAL');
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Calabresa com Catupiry', 'Molho de tomate, queijo mozarela, calabresa, catupiry, cebola', 'ESPECIAL');
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Napolitana', 'Molho de tomate, queijo mozarela, tomate fatiado, azeitonas, orégano', 'ESPECIAL');
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Romeu e Julieta', 'Molho de tomate, queijo mozarela, goiabada, queijo branco', 'DOCE');
+
+INSERT INTO pizza (nome, ingredientes, tipo)
+VALUES ('Brigadeiro', 'Creme de brigadeiro, granulado de chocolate', 'DOCE');
+
+
+INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (1, 1, 0.0);
+INSERT INTO pedido (nota_fiscal_id, tamanho, pizzas, bebidas, borda, valor_total)
+VALUES (LAST_INSERT_ID(), 'Grande', 'Calabresa com Catupiry; Margherita de Bufala', '2x - Coca-Cola 2L', 'Catupiry', 100.0);
+
+INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (1, 2, 0.0);
+INSERT INTO pedido (nota_fiscal_id, tamanho, pizzas, bebidas, borda, valor_total)
+VALUES (LAST_INSERT_ID(), 'Média', 'Brigadeiro', NULL, 'Cheddar', 30.0);
+
+INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (2, 3, 0.0);
+INSERT INTO pedido (nota_fiscal_id, tamanho, pizzas, bebidas, borda, valor_total)
+VALUES (LAST_INSERT_ID(), 'Pequena', 'Quatro Queijos', NULL, 'NULL', 30.0);
+
 
 INSERT INTO usuario (nome, email, senha, nivel) VALUES ('João da Silva', 'teste', '123456', 'USER');
+
+Sedução
+Mussarela, leite condensado,
+chocolate branco, morango e
+creme de leite
+
+Sensacao
+Mussarela, leite condensado,
+chocolate preto, morango e
+creme de leite

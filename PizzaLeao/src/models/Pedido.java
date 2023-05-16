@@ -2,6 +2,7 @@ package models;
 
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -16,19 +17,46 @@ public class Pedido {
     private int id;
     private int notaFiscalId;
     private String tamanho;
-    private String sabores;
+    private List<Pizza> sabores;
     private String bebidas;
     private String borda;
     private BigDecimal valorTotal;
+    private String nomeCliente;
+
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void setNomeCliente(String nomeCliente) {
+        this.nomeCliente = nomeCliente;
+    }
     
-    public Pedido(String tamanho, String sabores, String bebidas, String borda, BigDecimal valorTotal) {
+    public Pedido(String tamanho, List<Pizza> pizzas, String bebidas, String borda, BigDecimal valorTotal) {
         this.tamanho = tamanho;
-        this.sabores = sabores;
+        this.sabores = pizzas;
         this.bebidas = bebidas;
         this.borda = borda;
         this.valorTotal = valorTotal;
     }
-    
+    public Pedido(String tamanho, List<Pizza> pizzas, String borda, BigDecimal valorTotal) {
+        this.tamanho = tamanho;
+        this.sabores = pizzas;
+        this.borda = borda;
+        this.valorTotal = valorTotal;
+    }
+//    public Pedido(String tamanho, String pizzas, String bebidas, String borda, BigDecimal valorTotal) {
+//        this.tamanho = tamanho;
+//        this.pizzas = pizzas;
+//        this.bebidas = bebidas;
+//        this.borda = borda;
+//        this.valorTotal = valorTotal;
+//    }
+//    public Pedido(String tamanho, String pizzas, String borda, BigDecimal valorTotal) {
+//        this.tamanho = tamanho;
+//        this.pizzas = pizzas;
+//        this.borda = borda;
+//        this.valorTotal = valorTotal;
+//    }
     public int getId() {
         return id;
     }
@@ -53,12 +81,19 @@ public class Pedido {
         this.tamanho = tamanho;
     }
 
-    public String getSabores() {
-        return sabores;
+    public List<Pizza> getSabores() {
+        return this.sabores;
     }
 
-    public void setSabores(String sabores) {
-        this.sabores = sabores;
+    public String concatenaPizzas() {
+        StringBuilder sb = new StringBuilder();
+        for (Pizza sabor : sabores) {
+            sb.append(sabor.getNome()).append("; ");
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1); // Remove a última vírgula
+        }
+        return sb.toString();
     }
 
     public String getBebidas() {

@@ -5,7 +5,7 @@
  */
 package views;
 
-import api.Request;
+import dao.UsuarioDAO;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import models.User;
@@ -158,29 +158,21 @@ public class AuthForm extends javax.swing.JFrame {
         String login =tfUsuario.getText();
         String senha = String.valueOf(pfSenha.getPassword());
         if(login.length()>0 && senha.length()>0){
-            Request request = new Request();
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
             try {
-                User user = request.login(login, senha);
+                User user = usuarioDAO.login(login, senha);
                 System.out.print(user);
                 if(user==null){
                     JOptionPane.showMessageDialog(null, "Credenciais invalidas","Atenção", JOptionPane.WARNING_MESSAGE);
                     return;
                 }else{
-                    VendaPizza principal = new VendaPizza(user);
+                    VendaOuAdmin principal = new VendaOuAdmin(user);
                     principal.setVisible(true);
                 }
                 this.dispose();  
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Erro ao realizar consulta no banco de dados ","Erro",JOptionPane.ERROR_MESSAGE);
-            } finally {
-                try {
-                    request.closeConnection();
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, "Erro ao fechar conexão com o banco de dados ","Erro",JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            
-            
+            }              
         }    
     }//GEN-LAST:event_btnLoginActionPerformed
 

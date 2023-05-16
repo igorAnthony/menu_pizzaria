@@ -6,7 +6,7 @@ package models;
 
 /**
  *
- * @author aluno
+ * @author hawks
  */
 public class User {
     private int id;
@@ -54,4 +54,6 @@ public class User {
     public void setNivel(String nivel) {
         this.nivel = nivel;
     }
+
 }
+
