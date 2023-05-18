@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import models.Bebida;
 import models.Cliente;
-import models.Pedido;
+import models.Endereco;
 import models.Pizza;
+import models.PizzaMontada;
 
 /**
  *
@@ -27,17 +29,41 @@ public class AdicionarPedido extends javax.swing.JFrame {
     int limit = 1;
     String tamanho = "";
     private final Cliente cliente;
-    
-    List<Pedido> listaDePedido = new ArrayList<>();
-    List<Pizza> listaDeSabores = new ArrayList<>();
-    List<Pizza> saboresSelecionados = new ArrayList<>();
+    List<PizzaMontada> pizzasMontadas = null;
+    List<Pizza> listaDeSabores = null;
+    List<Bebida> listaDeBebidas = null;
+    List<Pizza> listaDeSaboresSelecionados = null;
+    Endereco enderecoSelecionado = null;
     PizzaDAO pizzaDAO = new PizzaDAO();
-    public AdicionarPedido(Cliente cliente, List<Pedido> listaDePedido) {
+    int indexParaAtualizar = -1;
+    int indexUltimaLinhaSelecionada = -1;
+    public AdicionarPedido(Cliente cliente) {
         this.cliente = cliente;
-        this.listaDePedido = listaDePedido;
+        this.listaDeSabores = new ArrayList<>();
         initComponents();
+        atualizarTabelaPizza();
+        atualizaLimite();
     }
-
+     public AdicionarPedido(Cliente cliente, List<PizzaMontada> pizzasMontadas, int pedidoASerAtualizado, List<Bebida> listaDeBebidas, Endereco enderecoSelecionado) {
+        this.cliente = cliente;
+        this.pizzasMontadas = pizzasMontadas;
+        this.listaDeBebidas = listaDeBebidas;
+        this.enderecoSelecionado = enderecoSelecionado;
+        initComponents();
+        atualizarTabelaPizza();
+        indexParaAtualizar = pedidoASerAtualizado;
+        pedidoParaAtualizar(pedidoASerAtualizado);
+        atualizarTabelaSaboresSelecionados();
+    }
+    public AdicionarPedido(Cliente cliente, List<PizzaMontada> pizzasMontadas, List<Bebida> listaDeBebidas, Endereco enderecoSelecionado) {
+        this.cliente = cliente;
+        this.enderecoSelecionado = enderecoSelecionado;
+        this.pizzasMontadas = pizzasMontadas;
+        this.listaDeBebidas = listaDeBebidas;
+        initComponents();
+        atualizarTabelaPizza();
+        atualizarTabelaSaboresSelecionados();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,7 +78,7 @@ public class AdicionarPedido extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         tamanhoComboBox = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabelaPizzaVenda = new javax.swing.JTable();
+        tabelaSaboresPizza = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         bordaCheddar = new javax.swing.JRadioButton();
         bordaMussarela = new javax.swing.JRadioButton();
@@ -65,12 +91,23 @@ public class AdicionarPedido extends javax.swing.JFrame {
         tabelaSaboresSelecionados = new javax.swing.JTable();
         removerSabor = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jRadioButton5 = new javax.swing.JRadioButton();
-        jButtonDoces1 = new javax.swing.JRadioButton();
-        jButtonDoces = new javax.swing.JRadioButton();
+        filtroSaboresEspeciais = new javax.swing.JRadioButton();
+        filtroSaboresTradicionais = new javax.swing.JRadioButton();
+        filtroSaboresDoces = new javax.swing.JRadioButton();
         adicionarPizza = new javax.swing.JButton();
+        removerSabor1 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        exibeIngredientes = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(90, 90, 90));
+        jPanel1.setForeground(new java.awt.Color(255, 119, 26));
 
         jLabel1.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 102, 0));
@@ -86,39 +123,46 @@ public class AdicionarPedido extends javax.swing.JFrame {
             }
         });
 
-        tabelaPizzaVenda.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaSaboresPizza.setBackground(new java.awt.Color(90, 90, 90));
+        tabelaSaboresPizza.setForeground(new java.awt.Color(255, 119, 26));
+        tabelaSaboresPizza.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Nome", "Descrição", "Tipo"
+                "Nome", "Tipo"
             }
         ));
-        jScrollPane1.setViewportView(tabelaPizzaVenda);
+        tabelaSaboresPizza.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaSaboresPizzaMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabelaSaboresPizza);
 
         jPanel2.setBackground(new java.awt.Color(90, 90, 90));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
 
         buttonGroup1.add(bordaCheddar);
-        bordaCheddar.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        bordaCheddar.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
         bordaCheddar.setForeground(new java.awt.Color(255, 102, 0));
         bordaCheddar.setText("Cheddar");
 
         buttonGroup1.add(bordaMussarela);
-        bordaMussarela.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        bordaMussarela.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
         bordaMussarela.setForeground(new java.awt.Color(255, 102, 0));
         bordaMussarela.setText("Mussarela com oregano");
 
         buttonGroup1.add(bordaChocolate);
-        bordaChocolate.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        bordaChocolate.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
         bordaChocolate.setForeground(new java.awt.Color(255, 102, 0));
         bordaChocolate.setText("Chocolate");
 
         buttonGroup1.add(bordaCatupiry);
-        bordaCatupiry.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        bordaCatupiry.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
         bordaCatupiry.setForeground(new java.awt.Color(255, 102, 0));
         bordaCatupiry.setText("Catupiry");
 
@@ -135,7 +179,7 @@ public class AdicionarPedido extends javax.swing.JFrame {
                 .addComponent(bordaMussarela)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(bordaCatupiry)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,6 +199,8 @@ public class AdicionarPedido extends javax.swing.JFrame {
 
         jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/pizza3.png"))); // NOI18N
 
+        adicionarSabor.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        adicionarSabor.setForeground(new java.awt.Color(255, 119, 26));
         adicionarSabor.setText("Adicionar");
         adicionarSabor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,6 +208,8 @@ public class AdicionarPedido extends javax.swing.JFrame {
             }
         });
 
+        tabelaSaboresSelecionados.setBackground(new java.awt.Color(90, 90, 90));
+        tabelaSaboresSelecionados.setForeground(new java.awt.Color(255, 119, 26));
         tabelaSaboresSelecionados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null},
@@ -170,11 +218,13 @@ public class AdicionarPedido extends javax.swing.JFrame {
                 {null}
             },
             new String [] {
-                "Sabores Selecionado"
+                "Sabores Selecionados"
             }
         ));
         jScrollPane2.setViewportView(tabelaSaboresSelecionados);
 
+        removerSabor.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        removerSabor.setForeground(new java.awt.Color(255, 119, 26));
         removerSabor.setText("Remover");
         removerSabor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -182,33 +232,66 @@ public class AdicionarPedido extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 119, 26));
-        jLabel6.setText("Filtrar sabores por:");
+        jLabel6.setText("Filtros");
 
-        jRadioButton5.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        jRadioButton5.setForeground(new java.awt.Color(255, 119, 26));
-        jRadioButton5.setText("~Sabores Especiais~");
+        filtroSaboresEspeciais.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        filtroSaboresEspeciais.setForeground(new java.awt.Color(255, 119, 26));
+        filtroSaboresEspeciais.setText("~Sabores Especiais~");
 
-        jButtonDoces1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        jButtonDoces1.setForeground(new java.awt.Color(255, 119, 26));
-        jButtonDoces1.setText("~Sabores Tradicionais~");
+        filtroSaboresTradicionais.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        filtroSaboresTradicionais.setForeground(new java.awt.Color(255, 119, 26));
+        filtroSaboresTradicionais.setText("~Sabores Tradicionais~");
 
-        jButtonDoces.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        jButtonDoces.setForeground(new java.awt.Color(255, 119, 26));
-        jButtonDoces.setText("~Sabores Doces~");
-        jButtonDoces.addActionListener(new java.awt.event.ActionListener() {
+        filtroSaboresDoces.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        filtroSaboresDoces.setForeground(new java.awt.Color(255, 119, 26));
+        filtroSaboresDoces.setText("~Sabores Doces~");
+        filtroSaboresDoces.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDocesActionPerformed(evt);
+                filtroSaboresDocesActionPerformed(evt);
             }
         });
 
+        adicionarPizza.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
+        adicionarPizza.setForeground(new java.awt.Color(255, 119, 26));
         adicionarPizza.setText("Finalizar");
         adicionarPizza.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 adicionarPizzaActionPerformed(evt);
             }
         });
+
+        removerSabor1.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        removerSabor1.setForeground(new java.awt.Color(255, 119, 26));
+        removerSabor1.setText("Filtrar");
+        removerSabor1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removerSabor1ActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel2.setText("Nome");
+
+        jLabel3.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel3.setText("Descrição");
+
+        exibeIngredientes.setBackground(new java.awt.Color(90, 90, 90));
+        exibeIngredientes.setColumns(20);
+        exibeIngredientes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        exibeIngredientes.setForeground(new java.awt.Color(255, 119, 26));
+        exibeIngredientes.setLineWrap(true);
+        exibeIngredientes.setRows(5);
+        exibeIngredientes.setText("Selecione uma pizza para exibir sua descrição nesse campo");
+        exibeIngredientes.setWrapStyleWord(true);
+        jScrollPane3.setViewportView(exibeIngredientes);
+
+        jLabel4.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel4.setText("Ingredientes");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -218,78 +301,118 @@ public class AdicionarPedido extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonDoces)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(tamanhoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonDoces1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton5)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 30, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(109, 109, 109)
-                                .addComponent(removerSabor)
-                                .addGap(18, 18, 18)
-                                .addComponent(adicionarPizza)
-                                .addGap(0, 32, Short.MAX_VALUE))
+                                .addGap(10, 10, 10)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel3))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(33, 33, 33)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(filtroSaboresDoces)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(filtroSaboresTradicionais)
+                                                    .addComponent(filtroSaboresEspeciais))
+                                                .addGap(18, 18, 18)
+                                                .addComponent(removerSabor1))))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addGap(436, 436, 436)
+                                            .addComponent(adicionarSabor))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(238, 238, 238)
+                                .addComponent(jLabel6)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(60, 60, 60)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(144, 144, 144)
+                                        .addComponent(removerSabor))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(121, 121, 121)
+                                        .addComponent(adicionarPizza)))
+                                .addContainerGap())
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(29, 29, 29))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel25)
-                                        .addGap(98, 98, 98))))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(tamanhoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel6))
-                        .addContainerGap(121, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(adicionarSabor)
-                .addGap(337, 337, 337))
+                                    .addComponent(jLabel4)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                            .addComponent(jLabel25)
+                                            .addGap(144, 144, 144))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(61, 61, 61)))))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(9, 9, 9)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(tamanhoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(tamanhoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonDoces)
-                            .addComponent(jButtonDoces1)
-                            .addComponent(jRadioButton5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(118, 118, 118)
                         .addComponent(jLabel25)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(removerSabor)
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(removerSabor)
-                            .addComponent(adicionarPizza))))
-                .addGap(28, 28, 28)
-                .addComponent(adicionarSabor)
+                        .addComponent(adicionarPizza))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3))
+                                .addGap(26, 26, 26)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(adicionarSabor))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(filtroSaboresDoces)
+                                .addGap(0, 0, 0)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(removerSabor1)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(filtroSaboresTradicionais)
+                                        .addGap(1, 1, 1)
+                                        .addComponent(filtroSaboresEspeciais)))))))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -297,22 +420,22 @@ public class AdicionarPedido extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void tamanhoComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tamanhoComboBoxActionPerformed
+        atualizaLimite();
+    }//GEN-LAST:event_tamanhoComboBoxActionPerformed
+    private void atualizaLimite(){
         switch (tamanhoComboBox.getSelectedIndex()) {
             case 0:
                 limit = 1;
@@ -333,19 +456,57 @@ public class AdicionarPedido extends javax.swing.JFrame {
                 limit = 4;
                 break;
         }
-    }//GEN-LAST:event_tamanhoComboBoxActionPerformed
+    }
+    private void pedidoParaAtualizar(int index){
+        if("Cheddar".equals(pizzasMontadas.get(index).getBorda())){
+            bordaCheddar.setSelected(true);
+        }
+        else if("Chocolate".equals(pizzasMontadas.get(index).getBorda())){
+            bordaMussarela.setSelected(true);
+        }
+        else if("Mussarela com oregano".equals(pizzasMontadas.get(index).getBorda())){
+            bordaChocolate.setSelected(true);
+        }else if("Catupiry".equals(pizzasMontadas.get(index).getBorda())){
+            bordaCatupiry.setSelected(true);
+        }
+
+        switch (pizzasMontadas.get(index).getTamanho()) {
+            case "PEQUENA":
+                tamanhoComboBox.setSelectedIndex(0);
+                break;
+            case "MÉDIA":
+                tamanhoComboBox.setSelectedIndex(1);
+                break;
+            case "GRANDE":
+                tamanhoComboBox.setSelectedIndex(2);
+                break;
+            case "GRANDE FAMILIA":
+                tamanhoComboBox.setSelectedIndex(3);
+                break;
+            case "BIG":
+                tamanhoComboBox.setSelectedIndex(4);
+                break;
+            case "BIG RETANGULAR":
+                tamanhoComboBox.setSelectedIndex(5);
+                break;
+        }
+        listaDeSaboresSelecionados = new ArrayList<>();
+        for(Pizza saborParaAtualizar : pizzasMontadas.get(index).getSabores()){
+            listaDeSaboresSelecionados.add(saborParaAtualizar);
+        }
+    }
     private void atualizarTabelaPizza() {
         try {
             listaDeSabores = pizzaDAO.buscarListaDePizzas();
-            DefaultTableModel model = (DefaultTableModel) tabelaPizzaVenda.getModel();
+            DefaultTableModel model = (DefaultTableModel) tabelaSaboresPizza.getModel();
+            
             model.setNumRows(0);
             for (int i = 0; i < listaDeSabores.size(); i++) {
                 Pizza pizza = listaDeSabores.get(i);
                 String nomePizza = pizza.getNome();
-                String ingredientes = pizza.getIngredientes();
                 String tipo = pizza.getTipo();
 
-                model.addRow(new Object[]{nomePizza, ingredientes, tipo});
+                model.addRow(new Object[]{nomePizza, tipo});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -355,29 +516,36 @@ public class AdicionarPedido extends javax.swing.JFrame {
         if(bordaCheddar.isSelected()){
             return "Cheddar";
         }
-        else if(bordaMussarela.isSelected()){
+        else if(bordaChocolate.isSelected()){
             return "Chocolate";
         }
-        else if(bordaChocolate.isSelected()){
+        else if(bordaMussarela.isSelected()){
             return "Mussarela com oregano";
         }else if(bordaCatupiry.isSelected()){
             return "Catupiry";
         }
         return "Sem borda";
     }
-    private void jButtonDocesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDocesActionPerformed
+    private void filtroSaboresDocesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtroSaboresDocesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonDocesActionPerformed
+    }//GEN-LAST:event_filtroSaboresDocesActionPerformed
     
     private void adicionarSaborActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarSaborActionPerformed
-        int linha =tabelaPizzaVenda.getSelectedRow();
-        if(linha<0){
-            JOptionPane.showMessageDialog(null, "Selecione um sabor para adicionar","Atenção", JOptionPane.WARNING_MESSAGE);
-            return;
+        if(listaDeSaboresSelecionados == null){
+            listaDeSaboresSelecionados = new ArrayList<>();
         }
-        Pizza pizzaSelecionado = listaDeSabores.get(linha); 
-        saboresSelecionados.add(pizzaSelecionado);
-        atualizarTabelaSelecionados();
+        if(listaDeSaboresSelecionados.size() + 1 <= limit){
+            int linha =tabelaSaboresPizza.getSelectedRow();
+            if(linha<0){
+                JOptionPane.showMessageDialog(null, "Selecione um sabor para adicionar","Atenção", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            Pizza pizzaSelecionado = listaDeSabores.get(linha); 
+            listaDeSaboresSelecionados.add(pizzaSelecionado);
+            atualizarTabelaSaboresSelecionados();
+        }else{
+                JOptionPane.showMessageDialog(null, "Para o tamanho selecionado pode adicionar " + limit + " sabor(es).","Atenção", JOptionPane.WARNING_MESSAGE);
+        }     
     }//GEN-LAST:event_adicionarSaborActionPerformed
 
     private void removerSaborActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerSaborActionPerformed
@@ -386,8 +554,8 @@ public class AdicionarPedido extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Selecione um endereço","Atenção", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        Pizza saborRemovido = saboresSelecionados.remove(linha);
-        atualizarTabelaSelecionados();
+        Pizza saborRemovido = listaDeSaboresSelecionados.remove(linha);
+        atualizarTabelaSaboresSelecionados();
     }//GEN-LAST:event_removerSaborActionPerformed
      private BigDecimal calcularValorTotal(){
         boolean isBordaCheck = false;
@@ -450,24 +618,47 @@ public class AdicionarPedido extends javax.swing.JFrame {
     }
     private void adicionarPizzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarPizzaActionPerformed
         BigDecimal total = calcularValorTotal();
-        listaDePedido.add(new Pedido(tamanho, saboresSelecionados, retornaBorda(), total));
-        VendaPizza pizza = new VendaPizza(cliente, listaDePedido);
+        if(pizzasMontadas == null){
+            pizzasMontadas = new ArrayList<>();
+            pizzasMontadas.add(new PizzaMontada(tamanho, listaDeSaboresSelecionados, retornaBorda(), calcularValorTotal()));
+        }else{
+            pizzasMontadas.get(indexParaAtualizar).setBorda(retornaBorda());
+            pizzasMontadas.get(indexParaAtualizar).setTamanho(tamanho);
+            pizzasMontadas.get(indexParaAtualizar).setSabores(listaDeSaboresSelecionados);
+            pizzasMontadas.get(indexParaAtualizar).setValorTotal(calcularValorTotal());
+        }
+        VendaPizza pizza = new VendaPizza(cliente, pizzasMontadas, listaDeBebidas, enderecoSelecionado);
         pizza.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_adicionarPizzaActionPerformed
 
+    private void removerSabor1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerSabor1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removerSabor1ActionPerformed
+
+    private void tabelaSaboresPizzaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaSaboresPizzaMouseClicked
+        int linha = tabelaSaboresPizza.getSelectedRow();
+        if(indexUltimaLinhaSelecionada != linha)
+        {
+            Pizza pizzaSelecionado = listaDeSabores.get(linha);
+            exibeIngredientes.setText(pizzaSelecionado.getIngredientes());
+            indexUltimaLinhaSelecionada = linha;
+        }
+    }//GEN-LAST:event_tabelaSaboresPizzaMouseClicked
+
     /**
      * @param args the command line arguments
      */
-    private void atualizarTabelaSelecionados() {
+    private void atualizarTabelaSaboresSelecionados() {
         DefaultTableModel model = (DefaultTableModel) tabelaSaboresSelecionados.getModel();
         model.setNumRows(0);
-        for (int i = 0; i < saboresSelecionados.size(); i++) {
-            Pizza pizza = saboresSelecionados.get(i);
-            String nomePizza = pizza.getNome();
-            String ingredientes = pizza.getIngredientes();
-            String tipo = pizza.getTipo();
-            model.addRow(new Object[]{nomePizza, ingredientes, tipo});
+        if(listaDeSaboresSelecionados != null){
+            for (int i = 0; i < listaDeSaboresSelecionados.size(); i++) {
+                Pizza pizza = listaDeSaboresSelecionados.get(i);
+                String nomePizza = pizza.getNome();
+                String tipo = pizza.getTipo();
+                model.addRow(new Object[]{nomePizza, tipo});
+            }
         }
     }
 
@@ -479,19 +670,27 @@ public class AdicionarPedido extends javax.swing.JFrame {
     private javax.swing.JRadioButton bordaChocolate;
     private javax.swing.JRadioButton bordaMussarela;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JRadioButton jButtonDoces;
-    private javax.swing.JRadioButton jButtonDoces1;
+    private javax.swing.JTextArea exibeIngredientes;
+    private javax.swing.JRadioButton filtroSaboresDoces;
+    private javax.swing.JRadioButton filtroSaboresEspeciais;
+    private javax.swing.JRadioButton filtroSaboresTradicionais;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JButton removerSabor;
-    private javax.swing.JTable tabelaPizzaVenda;
+    private javax.swing.JButton removerSabor1;
+    private javax.swing.JTable tabelaSaboresPizza;
     private javax.swing.JTable tabelaSaboresSelecionados;
     private javax.swing.JComboBox<String> tamanhoComboBox;
     // End of variables declaration//GEN-END:variables

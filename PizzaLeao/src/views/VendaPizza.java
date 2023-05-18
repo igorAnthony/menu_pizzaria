@@ -1,22 +1,35 @@
 package views;
 
+import dao.BebidaDAO;
 import dao.ClienteDAO;
-import models.Bebidas;
+import dao.PedidoDAO;
 import java.awt.Color;
 import javax.swing.JCheckBox;
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Component;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import models.Bebida;
 import models.Cliente;
 import models.Endereco;
+import models.NotaFiscal;
 import models.Pedido;
 import models.Pizza;
-import models.User;
+import models.PizzaMontada;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -31,34 +44,43 @@ public class VendaPizza extends javax.swing.JFrame {
     int nr_pedido = 0;
     String tamanho = "";
     List<Pizza> sabores;
-    List<Bebidas> listaDeBebidas = new ArrayList<>();
-    List<Pedido> listaDePedidos = new ArrayList<>();
+    List<Bebida> listaDeBebidasSelecionadas = null;
+    List<PizzaMontada> listaDePizzasMontadas = null;
+    Endereco enderecoSelecionado = null;
+    List<Bebida> listaDeBebidas = null;
     List<JCheckBox> checkboxList = new ArrayList<>();
+    PedidoDAO pedidoDAO = null;
     List<JFormattedTextField> formattedTextFieldList = new ArrayList<>();
 
     ClienteDAO clienteDAO = new ClienteDAO();
-    private List<Endereco> enderecos;
+    BebidaDAO bebidaDAO = new BebidaDAO();
     /**
      * Creates new form VendaLanche
      */
-    private final Cliente cliente;
+    private Cliente clienteSelecionado = new Cliente();
+    private List<Cliente> listaClientes = new ArrayList<>();
+    private List<Endereco> listaDeEnderecos = null;
     
     public VendaPizza() {
-        cliente = new Cliente();
         initComponents();
-        adicionaBebidas(panelRefrigerantes.getComponents());
         getContentPane().setBackground(Color.DARK_GRAY);
-        atualizarTabela();
+        atualizarTabelaCliente("","");
+        atualizarTabelaEndereco("","","");
+        atualizarTabelaBebida("");
     }
     
-    public VendaPizza(Cliente cliente, List<Pedido> listaDePedidos) {
-        this.cliente = cliente;
-        this.listaDePedidos = listaDePedidos;
+    public VendaPizza(Cliente cliente, List<PizzaMontada> listaDePizzasMontadas, List<Bebida> listaDeBebidasSelecionadas, Endereco enderecoSelecionado) {
+        this.clienteSelecionado = cliente;
+        this.listaDePizzasMontadas = listaDePizzasMontadas;
+        this.listaDeBebidasSelecionadas = listaDeBebidasSelecionadas;
+        this.enderecoSelecionado = enderecoSelecionado;
         initComponents();
-        adicionaBebidas(panelRefrigerantes.getComponents());
         getContentPane().setBackground(Color.DARK_GRAY);
-        atualizarTabela();
-        atualizarTabelaCarrinho();
+        atualizarTabelaCliente("","");
+        atualizarTabelaEndereco("","","");
+        atualizarTabelaBebida("");
+        atualizarTabelaCarrinhoPizza();
+        atualizarTabelaCarrinhoBebida();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -92,59 +114,45 @@ public class VendaPizza extends javax.swing.JFrame {
         jButtonDoces = new javax.swing.JRadioButton();
         jButton5 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        txf_Total = new javax.swing.JTextField();
-        btn_reset = new javax.swing.JButton();
-        btn_Sair = new javax.swing.JButton();
+        cancelar = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        btn_ConcluirPedido = new javax.swing.JButton();
+        concluirPedido = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        panelSabores = new javax.swing.JPanel();
+        panelCliente = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
+        cadastroNomeCliente = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
+        cadastroCliente = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
         tabelaCliente = new javax.swing.JTable();
         jLabel38 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
-        jTextField13 = new javax.swing.JTextField();
+        cadastroTelefoneCliente = new javax.swing.JTextField();
         jLabel40 = new javax.swing.JLabel();
-        jTextField16 = new javax.swing.JTextField();
+        filtroNomeCliente = new javax.swing.JTextField();
         jLabel41 = new javax.swing.JLabel();
         jLabel42 = new javax.swing.JLabel();
-        jTextField18 = new javax.swing.JTextField();
-        jButton8 = new javax.swing.JButton();
-        panelBebidas = new javax.swing.JPanel();
-        panelRefrigerantes = new javax.swing.JPanel();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        quantidade1 = new javax.swing.JFormattedTextField();
-        quantidade2 = new javax.swing.JFormattedTextField();
-        quantidade3 = new javax.swing.JFormattedTextField();
-        quantidade4 = new javax.swing.JFormattedTextField();
-        quantidade5 = new javax.swing.JFormattedTextField();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
+        filtroTelefoneCliente = new javax.swing.JTextField();
+        filtrarCliente = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        selecionarCliente = new javax.swing.JButton();
+        editarCliente = new javax.swing.JButton();
+        excluirCliente = new javax.swing.JButton();
+        cadastroDataDeNascimentoCliente = new com.toedter.calendar.JDateChooser();
+        jLabel2 = new javax.swing.JLabel();
         panelEnderecos = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         tCEP = new javax.swing.JTextField();
-        jLabel29 = new javax.swing.JLabel();
-        tDescricao = new javax.swing.JTextField();
+        tRua = new javax.swing.JTextField();
         jDescricaoCadastro = new javax.swing.JLabel();
         tBairro = new javax.swing.JTextField();
         jLabel30 = new javax.swing.JLabel();
@@ -152,22 +160,50 @@ public class VendaPizza extends javax.swing.JFrame {
         jLabel32 = new javax.swing.JLabel();
         tNumero = new javax.swing.JTextField();
         jNumero = new javax.swing.JLabel();
-        btn_cadastrar = new javax.swing.JButton();
+        cadastrarEndereco = new javax.swing.JButton();
+        jLabel29 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jDescricaoBusca = new javax.swing.JTextField();
+        filtroRua = new javax.swing.JTextField();
         jLabel35 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        tabela = new javax.swing.JTable();
-        btn_excluir = new javax.swing.JButton();
+        filtrarEndereco = new javax.swing.JButton();
+        jScrollPane = new javax.swing.JScrollPane();
+        tabelaEndereco = new javax.swing.JTable();
+        excluirEndereco = new javax.swing.JButton();
+        atualizarEndereco = new javax.swing.JButton();
+        filtroCep = new javax.swing.JTextField();
+        jLabel43 = new javax.swing.JLabel();
+        filtroBairro = new javax.swing.JTextField();
+        jLabel44 = new javax.swing.JLabel();
+        selecionarEndereco = new javax.swing.JButton();
         jLabel33 = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        panelBebidas = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        Bebida = new javax.swing.JScrollPane();
+        tabelaBebida = new javax.swing.JTable();
+        adicionarBebida = new javax.swing.JButton();
+        quantidadeBebida = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        filtroNomeBebida = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        filtrarBebida = new javax.swing.JButton();
+        jLabel21 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tabelaCarrinho = new javax.swing.JTable();
+        tabelaCarrinhoPizza = new javax.swing.JTable();
         jLabel37 = new javax.swing.JLabel();
-        btn_ConcluirPedido1 = new javax.swing.JButton();
+        adicionarPizza = new javax.swing.JButton();
+        editarPizza = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tabelaCarrinhoBebida = new javax.swing.JTable();
+        jLabel45 = new javax.swing.JLabel();
+        removerSabor = new javax.swing.JButton();
+        atualizarBebida = new javax.swing.JButton();
+        removerBebida = new javax.swing.JButton();
+        totalPedido = new javax.swing.JTextField();
 
         jLabel1.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 102, 0));
@@ -389,24 +425,12 @@ public class VendaPizza extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 102, 0));
         jLabel4.setText("Total ");
 
-        txf_Total.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
-        txf_Total.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-
-        btn_reset.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        btn_reset.setForeground(new java.awt.Color(255, 102, 0));
-        btn_reset.setText("Reset");
-        btn_reset.addActionListener(new java.awt.event.ActionListener() {
+        cancelar.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        cancelar.setForeground(new java.awt.Color(255, 102, 0));
+        cancelar.setText("Cancelar");
+        cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_resetActionPerformed(evt);
-            }
-        });
-
-        btn_Sair.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        btn_Sair.setForeground(new java.awt.Color(255, 102, 0));
-        btn_Sair.setText("Cancelar");
-        btn_Sair.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_SairActionPerformed(evt);
+                cancelarActionPerformed(evt);
             }
         });
 
@@ -428,22 +452,22 @@ public class VendaPizza extends javax.swing.JFrame {
 
         jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/cartao.png"))); // NOI18N
 
-        btn_ConcluirPedido.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        btn_ConcluirPedido.setForeground(new java.awt.Color(255, 102, 0));
-        btn_ConcluirPedido.setText("Concluir pedido");
-        btn_ConcluirPedido.addActionListener(new java.awt.event.ActionListener() {
+        concluirPedido.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
+        concluirPedido.setForeground(new java.awt.Color(255, 102, 0));
+        concluirPedido.setText("Concluir pedido");
+        concluirPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ConcluirPedidoActionPerformed(evt);
+                concluirPedidoActionPerformed(evt);
             }
         });
 
         jTabbedPane1.setForeground(new java.awt.Color(255, 102, 0));
         jTabbedPane1.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
 
-        panelSabores.setBackground(new java.awt.Color(90, 90, 90));
-        panelSabores.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
-        panelSabores.setForeground(new java.awt.Color(255, 102, 0));
-        panelSabores.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        panelCliente.setBackground(new java.awt.Color(90, 90, 90));
+        panelCliente.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
+        panelCliente.setForeground(new java.awt.Color(255, 102, 0));
+        panelCliente.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 119, 26));
@@ -457,335 +481,242 @@ public class VendaPizza extends javax.swing.JFrame {
         jLabel8.setMaximumSize(new java.awt.Dimension(50, 16));
         jLabel8.setMinimumSize(new java.awt.Dimension(50, 16));
 
-        jTextField10.addActionListener(new java.awt.event.ActionListener() {
+        cadastroNomeCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField10ActionPerformed(evt);
+                cadastroNomeClienteActionPerformed(evt);
             }
         });
 
-        jLabel26.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        jLabel26.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel26.setForeground(new java.awt.Color(255, 119, 26));
         jLabel26.setText("Nome");
 
-        jLabel28.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        jLabel28.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel28.setForeground(new java.awt.Color(255, 119, 26));
         jLabel28.setText("Telefone");
 
-        jLabel36.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel36.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
         jLabel36.setForeground(new java.awt.Color(255, 119, 26));
         jLabel36.setText("Cadastrar cliente");
 
-        jButton6.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(255, 119, 26));
-        jButton6.setText("Cadastrar");
+        cadastroCliente.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        cadastroCliente.setForeground(new java.awt.Color(255, 119, 26));
+        cadastroCliente.setText("Cadastrar");
+        cadastroCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cadastroClienteActionPerformed(evt);
+            }
+        });
 
+        tabelaCliente.setBackground(new java.awt.Color(90, 90, 90));
+        tabelaCliente.setForeground(new java.awt.Color(255, 119, 26));
         tabelaCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Nome", "Telefone", "Data de nascimento"
+                "Nome", "Telefone"
             }
         ));
         jScrollPane7.setViewportView(tabelaCliente);
 
-        jLabel38.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel38.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
         jLabel38.setForeground(new java.awt.Color(255, 119, 26));
-        jLabel38.setText("Selecionar cliente");
+        jLabel38.setText("Lista de clientes cadastrados");
 
-        jTextField11.addActionListener(new java.awt.event.ActionListener() {
+        cadastroTelefoneCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField11ActionPerformed(evt);
+                cadastroTelefoneClienteActionPerformed(evt);
             }
         });
 
-        jTextField13.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField13ActionPerformed(evt);
-            }
-        });
-
-        jLabel40.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        jLabel40.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel40.setForeground(new java.awt.Color(255, 119, 26));
         jLabel40.setText("Data de nascimento");
 
-        jTextField16.setToolTipText("");
+        filtroNomeCliente.setToolTipText("");
 
-        jLabel41.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        jLabel41.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel41.setForeground(new java.awt.Color(255, 119, 26));
         jLabel41.setText("Nome");
 
-        jLabel42.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        jLabel42.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel42.setForeground(new java.awt.Color(255, 119, 26));
         jLabel42.setText("Telefone");
 
-        jButton8.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
-        jButton8.setForeground(new java.awt.Color(255, 119, 26));
-        jButton8.setText("Consultar");
-
-        javax.swing.GroupLayout panelSaboresLayout = new javax.swing.GroupLayout(panelSabores);
-        panelSabores.setLayout(panelSaboresLayout);
-        panelSaboresLayout.setHorizontalGroup(
-            panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSaboresLayout.createSequentialGroup()
-                .addGap(1058, 1058, 1058)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(panelSaboresLayout.createSequentialGroup()
-                .addGap(161, 161, 161)
-                .addComponent(jLabel38)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelSaboresLayout.createSequentialGroup()
-                    .addGap(162, 162, 162)
-                    .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelSaboresLayout.createSequentialGroup()
-                            .addGap(2, 2, 2)
-                            .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(panelSaboresLayout.createSequentialGroup()
-                                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 773, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel39))
-                                .addGroup(panelSaboresLayout.createSequentialGroup()
-                                    .addComponent(jLabel41)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabel42)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jButton8))))
-                        .addComponent(jLabel36)
-                        .addGroup(panelSaboresLayout.createSequentialGroup()
-                            .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel28)
-                                .addComponent(jLabel26))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jTextField10)
-                                .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(18, 18, 18)
-                            .addComponent(jLabel40)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(53, 53, 53)
-                            .addComponent(jButton6)))
-                    .addContainerGap(162, Short.MAX_VALUE)))
-        );
-        panelSaboresLayout.setVerticalGroup(
-            panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSaboresLayout.createSequentialGroup()
-                .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelSaboresLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelSaboresLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(147, 147, 147)
-                .addComponent(jLabel38)
-                .addContainerGap(320, Short.MAX_VALUE))
-            .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panelSaboresLayout.createSequentialGroup()
-                    .addGap(88, 88, 88)
-                    .addComponent(jLabel36)
-                    .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelSaboresLayout.createSequentialGroup()
-                            .addGap(18, 18, 18)
-                            .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel40)
-                                .addComponent(jLabel26))
-                            .addGap(12, 12, 12)
-                            .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel28)))
-                        .addGroup(panelSaboresLayout.createSequentialGroup()
-                            .addGap(36, 36, 36)
-                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-                    .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel41)
-                        .addComponent(jLabel42)
-                        .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton8))
-                    .addGroup(panelSaboresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelSaboresLayout.createSequentialGroup()
-                            .addGap(121, 121, 121)
-                            .addComponent(jLabel39))
-                        .addGroup(panelSaboresLayout.createSequentialGroup()
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGap(89, 89, 89)))
-        );
-
-        jTabbedPane1.addTab("Cliente", panelSabores);
-
-        panelBebidas.setBackground(new java.awt.Color(90, 90, 90));
-        panelBebidas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
-        panelBebidas.setMaximumSize(new java.awt.Dimension(32767, 25000));
-
-        panelRefrigerantes.setBackground(new java.awt.Color(90, 90, 90));
-        panelRefrigerantes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
-
-        jLabel19.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel19.setText("Coca-Cola Original 2l");
-
-        jLabel20.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel20.setText("Sprite Pet 2l C/Açucar");
-
-        jLabel21.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
-        jLabel21.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel21.setText("Fanta Laranja 2l");
-
-        jLabel22.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
-        jLabel22.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel22.setText("Kuat Guaraná 2l");
-
-        jLabel23.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
-        jLabel23.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel23.setText("Coca-Cola Original 350ml");
-
-        quantidade1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        quantidade1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        quantidade1.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        quantidade1.addActionListener(new java.awt.event.ActionListener() {
+        filtrarCliente.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        filtrarCliente.setForeground(new java.awt.Color(255, 119, 26));
+        filtrarCliente.setText("Filtrar");
+        filtrarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                quantidade1ActionPerformed(evt);
+                filtrarClienteActionPerformed(evt);
             }
         });
 
-        quantidade2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        quantidade2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        quantidade2.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel10.setText("Cliente selecionado");
 
-        quantidade3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        quantidade3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        quantidade3.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        selecionarCliente.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        selecionarCliente.setForeground(new java.awt.Color(255, 119, 26));
+        selecionarCliente.setText("Selecionar");
+        selecionarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selecionarClienteActionPerformed(evt);
+            }
+        });
 
-        quantidade4.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        quantidade4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        quantidade4.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        editarCliente.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        editarCliente.setForeground(new java.awt.Color(255, 119, 26));
+        editarCliente.setText("Editar");
+        editarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarClienteActionPerformed(evt);
+            }
+        });
 
-        quantidade5.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
-        quantidade5.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        quantidade5.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        excluirCliente.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        excluirCliente.setForeground(new java.awt.Color(255, 119, 26));
+        excluirCliente.setText("Excluir");
+        excluirCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                excluirClienteActionPerformed(evt);
+            }
+        });
 
-        jLabel24.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        jLabel24.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel24.setText("Quant.");
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/pizza4.png"))); // NOI18N
 
-        javax.swing.GroupLayout panelRefrigerantesLayout = new javax.swing.GroupLayout(panelRefrigerantes);
-        panelRefrigerantes.setLayout(panelRefrigerantesLayout);
-        panelRefrigerantesLayout.setHorizontalGroup(
-            panelRefrigerantesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelRefrigerantesLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(panelRefrigerantesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelRefrigerantesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(quantidade1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(quantidade2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(quantidade3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(quantidade4, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(quantidade5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRefrigerantesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        panelRefrigerantesLayout.setVerticalGroup(
-            panelRefrigerantesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRefrigerantesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel24)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelRefrigerantesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel19)
-                    .addComponent(quantidade1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelRefrigerantesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20)
-                    .addComponent(quantidade2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelRefrigerantesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel21)
-                    .addComponent(quantidade3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        javax.swing.GroupLayout panelClienteLayout = new javax.swing.GroupLayout(panelCliente);
+        panelCliente.setLayout(panelClienteLayout);
+        panelClienteLayout.setHorizontalGroup(
+            panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelClienteLayout.createSequentialGroup()
+                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelClienteLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addGap(158, 158, 158)
+                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelClienteLayout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(16, 16, 16)
+                                .addComponent(selecionarCliente)
+                                .addGap(42, 42, 42)
+                                .addComponent(editarCliente)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(excluirCliente)))
+                        .addGap(32, 32, 32))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelClienteLayout.createSequentialGroup()
+                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panelClienteLayout.createSequentialGroup()
+                                .addContainerGap(584, Short.MAX_VALUE)
+                                .addComponent(jLabel38))
+                            .addGroup(panelClienteLayout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelClienteLayout.createSequentialGroup()
+                                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel28, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel40, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cadastroTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cadastroCliente)
+                                            .addComponent(cadastroDataDeNascimentoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(44, 44, 44))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelClienteLayout.createSequentialGroup()
+                                        .addComponent(jLabel26)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cadastroNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panelClienteLayout.createSequentialGroup()
+                                        .addGap(76, 76, 76)
+                                        .addComponent(jLabel36)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel41)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(filtroNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(jLabel42)
+                                .addGap(18, 18, 18)
+                                .addComponent(filtroTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(26, 26, 26)
+                        .addComponent(filtrarCliente)
+                        .addGap(63, 63, 63)))
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16)
-                .addGroup(panelRefrigerantesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel22)
-                    .addComponent(quantidade4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelRefrigerantesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel23)
-                    .addComponent(quantidade5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19))
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelClienteLayout.createSequentialGroup()
+                    .addGap(943, 943, 943)
+                    .addComponent(jLabel39)
+                    .addContainerGap(162, Short.MAX_VALUE)))
+        );
+        panelClienteLayout.setVerticalGroup(
+            panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelClienteLayout.createSequentialGroup()
+                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelClienteLayout.createSequentialGroup()
+                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelClienteLayout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelClienteLayout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelClienteLayout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel38)
+                                .addGap(18, 18, 18)
+                                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel41)
+                                    .addComponent(filtroNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(filtroTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel42)
+                                    .addComponent(filtrarCliente))
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(excluirCliente)
+                            .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel10)
+                                .addComponent(selecionarCliente)
+                                .addComponent(editarCliente))))
+                    .addGroup(panelClienteLayout.createSequentialGroup()
+                        .addGap(89, 89, 89)
+                        .addComponent(jLabel36)
+                        .addGap(34, 34, 34)
+                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel26)
+                            .addComponent(cadastroNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cadastroTelefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel28))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel40)
+                            .addComponent(cadastroDataDeNascimentoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addComponent(cadastroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)))
+                .addGap(48, 48, 48))
+            .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelClienteLayout.createSequentialGroup()
+                    .addContainerGap(411, Short.MAX_VALUE)
+                    .addComponent(jLabel39)
+                    .addGap(89, 89, 89)))
         );
 
-        jLabel15.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel15.setText("~Refrigerantes~");
-
-        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/soda.png"))); // NOI18N
-
-        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/dec.png"))); // NOI18N
-
-        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/leao.png"))); // NOI18N
-
-        javax.swing.GroupLayout panelBebidasLayout = new javax.swing.GroupLayout(panelBebidas);
-        panelBebidas.setLayout(panelBebidasLayout);
-        panelBebidasLayout.setHorizontalGroup(
-            panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBebidasLayout.createSequentialGroup()
-                .addGap(58, 58, 58)
-                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(78, 78, 78)
-                .addComponent(panelRefrigerantes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
-                .addComponent(jLabel17)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel18)
-                .addGap(50, 50, 50))
-            .addGroup(panelBebidasLayout.createSequentialGroup()
-                .addGap(450, 450, 450)
-                .addComponent(jLabel15)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelBebidasLayout.setVerticalGroup(
-            panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBebidasLayout.createSequentialGroup()
-                .addGap(53, 53, 53)
-                .addComponent(jLabel15)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
-                .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel17)
-                            .addComponent(panelRefrigerantes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panelBebidasLayout.createSequentialGroup()
-                            .addGap(13, 13, 13)
-                            .addComponent(jLabel16)))
-                    .addComponent(jLabel18))
-                .addGap(112, 112, 112))
-        );
-
-        jTabbedPane1.addTab("Bebidas", panelBebidas);
+        jTabbedPane1.addTab("Cliente", panelCliente);
 
         panelEnderecos.setBackground(new java.awt.Color(90, 90, 90));
         panelEnderecos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
@@ -796,36 +727,36 @@ public class VendaPizza extends javax.swing.JFrame {
 
         tCEP.setToolTipText("");
 
-        jLabel29.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
-        jLabel29.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel29.setText("CEP");
+        tRua.setToolTipText("");
 
-        tDescricao.setToolTipText("");
-
-        jDescricaoCadastro.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        jDescricaoCadastro.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
         jDescricaoCadastro.setForeground(new java.awt.Color(255, 102, 0));
         jDescricaoCadastro.setText("Rua");
 
         tBairro.setToolTipText("");
 
-        jLabel32.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        jLabel32.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
         jLabel32.setForeground(new java.awt.Color(255, 102, 0));
         jLabel32.setText("Bairro");
 
         tNumero.setToolTipText("");
 
-        jNumero.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        jNumero.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
         jNumero.setForeground(new java.awt.Color(255, 102, 0));
         jNumero.setText("Numero");
 
-        btn_cadastrar.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
-        btn_cadastrar.setForeground(new java.awt.Color(255, 102, 0));
-        btn_cadastrar.setText("Cadastrar");
-        btn_cadastrar.addActionListener(new java.awt.event.ActionListener() {
+        cadastrarEndereco.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
+        cadastrarEndereco.setForeground(new java.awt.Color(255, 102, 0));
+        cadastrarEndereco.setText("Cadastrar");
+        cadastrarEndereco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_cadastrarActionPerformed(evt);
+                cadastrarEnderecoActionPerformed(evt);
             }
         });
+
+        jLabel29.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
+        jLabel29.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel29.setText("CEP");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -840,24 +771,28 @@ public class VendaPizza extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel32)
-                            .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jDescricaoCadastro, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel32)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(22, 22, 22)
-                                .addComponent(jNumero)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tNumero))
-                            .addComponent(tCEP, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jNumero)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(172, 172, 172)
-                        .addComponent(btn_cadastrar)))
+                        .addGap(50, 50, 50)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel29)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tCEP, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jDescricaoCadastro)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tRua, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(158, 158, 158)
+                        .addComponent(cadastrarEndereco)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -869,78 +804,103 @@ public class VendaPizza extends javax.swing.JFrame {
                     .addComponent(jLabel31))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tRua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jDescricaoCadastro))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tCEP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel29))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel32)
                     .addComponent(tBairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jNumero))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_cadastrar)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(cadastrarEndereco)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(90, 90, 90));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
 
-        jDescricaoBusca.addActionListener(new java.awt.event.ActionListener() {
+        filtroRua.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jDescricaoBuscaActionPerformed(evt);
+                filtroRuaActionPerformed(evt);
             }
         });
 
-        jLabel35.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        jLabel35.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
         jLabel35.setForeground(new java.awt.Color(255, 102, 0));
         jLabel35.setText("Rua");
 
-        jButton1.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 102, 0));
-        jButton1.setText("Buscar");
+        filtrarEndereco.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
+        filtrarEndereco.setForeground(new java.awt.Color(255, 102, 0));
+        filtrarEndereco.setText("Filtrar");
+        filtrarEndereco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtrarEnderecoActionPerformed(evt);
+            }
+        });
 
-        tabela.setBackground(new java.awt.Color(90, 90, 90));
-        tabela.setForeground(new java.awt.Color(255, 102, 0));
-        tabela.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaEndereco.setBackground(new java.awt.Color(90, 90, 90));
+        tabelaEndereco.setForeground(new java.awt.Color(255, 119, 26));
+        tabelaEndereco.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
             new String [] {
-                "RUA", "CEP", "BAIRRO", "NUMERO"
+                "Rua", "CEP", "Bairro", "Numero"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
+        ));
+        jScrollPane.setViewportView(tabelaEndereco);
+        if (tabelaEndereco.getColumnModel().getColumnCount() > 0) {
+            tabelaEndereco.getColumnModel().getColumn(2).setHeaderValue("Bairro");
+            tabelaEndereco.getColumnModel().getColumn(3).setHeaderValue("Numero");
+        }
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+        excluirEndereco.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        excluirEndereco.setForeground(new java.awt.Color(255, 102, 0));
+        excluirEndereco.setText("Excluir");
+        excluirEndereco.setToolTipText("Para excluir, selecione o endereço");
+        excluirEndereco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                excluirEnderecoActionPerformed(evt);
             }
         });
-        tabela.setGridColor(new java.awt.Color(255, 255, 255));
-        jScrollPane4.setViewportView(tabela);
 
-        btn_excluir.setForeground(new java.awt.Color(255, 102, 0));
-        btn_excluir.setText("Excluir");
-        btn_excluir.setToolTipText("Para excluir, selecione o endereço");
-        btn_excluir.addActionListener(new java.awt.event.ActionListener() {
+        atualizarEndereco.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        atualizarEndereco.setForeground(new java.awt.Color(255, 102, 0));
+        atualizarEndereco.setText("Atualizar");
+        atualizarEndereco.setToolTipText("Para excluir, selecione o endereço");
+        atualizarEndereco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_excluirActionPerformed(evt);
+                atualizarEnderecoActionPerformed(evt);
+            }
+        });
+
+        filtroCep.setToolTipText("");
+
+        jLabel43.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
+        jLabel43.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel43.setText("CEP");
+
+        filtroBairro.setToolTipText("");
+
+        jLabel44.setFont(new java.awt.Font("Cascadia Code", 0, 14)); // NOI18N
+        jLabel44.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel44.setText("Bairro");
+
+        selecionarEndereco.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        selecionarEndereco.setForeground(new java.awt.Color(255, 102, 0));
+        selecionarEndereco.setText("Selecionar");
+        selecionarEndereco.setToolTipText("Para excluir, selecione o endereço");
+        selecionarEndereco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selecionarEnderecoActionPerformed(evt);
             }
         });
 
@@ -948,37 +908,61 @@ public class VendaPizza extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(42, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(btn_excluir)
-                        .addGap(32, 32, 32))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(40, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel35)
+                            .addComponent(jLabel43))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel35)
+                                .addComponent(filtroCep, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel44)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jDescricaoBusca, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton1))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(43, 43, 43))))
+                                .addComponent(filtroBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(filtroRua, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(filtrarEndereco)
+                        .addGap(14, 14, 14))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(selecionarEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(atualizarEndereco)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(excluirEndereco))
+                    .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel35)
-                    .addComponent(jDescricaoBusca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel35)
+                            .addComponent(filtroRua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(filtroCep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel43)
+                            .addComponent(jLabel44)
+                            .addComponent(filtroBairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(filtrarEndereco)))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btn_excluir)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(excluirEndereco)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(atualizarEndereco)
+                        .addComponent(selecionarEndereco)))
+                .addGap(20, 20, 20))
         );
 
         jLabel33.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
@@ -989,50 +973,235 @@ public class VendaPizza extends javax.swing.JFrame {
         jLabel34.setForeground(new java.awt.Color(255, 102, 0));
         jLabel34.setText("Lista de endereços cadastrados");
 
+        jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/pizza5.png"))); // NOI18N
+
         javax.swing.GroupLayout panelEnderecosLayout = new javax.swing.GroupLayout(panelEnderecos);
         panelEnderecos.setLayout(panelEnderecosLayout);
         panelEnderecosLayout.setHorizontalGroup(
             panelEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelEnderecosLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
                 .addGroup(panelEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelEnderecosLayout.createSequentialGroup()
+                        .addGap(46, 46, 46)
                         .addGroup(panelEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelEnderecosLayout.createSequentialGroup()
-                                .addGap(126, 126, 126)
-                                .addComponent(jLabel33)))
-                        .addGap(22, 22, 22)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelEnderecosLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel34)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelEnderecosLayout.createSequentialGroup()
+                                .addComponent(jLabel33)
+                                .addGap(141, 141, 141)))
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelEnderecosLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel27)
+                        .addGap(183, 183, 183)))
+                .addGroup(panelEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelEnderecosLayout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(jLabel34)
+                        .addGap(88, 88, 88)))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
         panelEnderecosLayout.setVerticalGroup(
             panelEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelEnderecosLayout.createSequentialGroup()
-                .addContainerGap(151, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
                 .addComponent(jLabel34)
+                .addGap(33, 33, 33)
                 .addGroup(panelEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelEnderecosLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(80, 80, 80))
                     .addGroup(panelEnderecosLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
                         .addComponent(jLabel33)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(108, 108, 108))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel27)
+                        .addGap(0, 21, Short.MAX_VALUE))))
         );
 
         jTabbedPane1.addTab("Endereços Cadastrados", panelEnderecos);
 
-        jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/pizza5.png"))); // NOI18N
+        panelBebidas.setBackground(new java.awt.Color(90, 90, 90));
+        panelBebidas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 102, 0)));
+        panelBebidas.setMaximumSize(new java.awt.Dimension(32767, 25000));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/pizza4.png"))); // NOI18N
+        jLabel15.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel15.setText("~Filtro~");
 
-        tabelaCarrinho.setModel(new javax.swing.table.DefaultTableModel(
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/soda.png"))); // NOI18N
+
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/dec.png"))); // NOI18N
+
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/leao.png"))); // NOI18N
+
+        tabelaBebida.setBackground(new java.awt.Color(90, 90, 90));
+        tabelaBebida.setForeground(new java.awt.Color(255, 119, 26));
+        tabelaBebida.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Nome", "Preço"
+            }
+        ));
+        Bebida.setViewportView(tabelaBebida);
+
+        adicionarBebida.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
+        adicionarBebida.setForeground(new java.awt.Color(255, 102, 0));
+        adicionarBebida.setText("Adicionar");
+        adicionarBebida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adicionarBebidaActionPerformed(evt);
+            }
+        });
+
+        quantidadeBebida.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        quantidadeBebida.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel19.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel19.setText("Quantidade:");
+
+        jLabel20.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel20.setText("Nome bebida");
+
+        filtrarBebida.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        filtrarBebida.setForeground(new java.awt.Color(255, 119, 26));
+        filtrarBebida.setText("Filtrar");
+        filtrarBebida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtrarBebidaActionPerformed(evt);
+            }
+        });
+
+        jLabel21.setFont(new java.awt.Font("Cascadia Code", 1, 24)); // NOI18N
+        jLabel21.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel21.setText("~Refrigerantes~");
+
+        javax.swing.GroupLayout panelBebidasLayout = new javax.swing.GroupLayout(panelBebidas);
+        panelBebidas.setLayout(panelBebidasLayout);
+        panelBebidasLayout.setHorizontalGroup(
+            panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBebidasLayout.createSequentialGroup()
+                .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelBebidasLayout.createSequentialGroup()
+                        .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelBebidasLayout.createSequentialGroup()
+                                .addGap(56, 56, 56)
+                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(101, 101, 101)
+                                .addComponent(Bebida, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelBebidasLayout.createSequentialGroup()
+                                .addGap(474, 474, 474)
+                                .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(adicionarBebida)
+                                    .addGroup(panelBebidasLayout.createSequentialGroup()
+                                        .addComponent(jLabel19)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(quantidadeBebida, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBebidasLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel21)
+                            .addGroup(panelBebidasLayout.createSequentialGroup()
+                                .addComponent(jLabel20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(filtroNomeBebida, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(filtrarBebida)
+                        .addGap(90, 90, 90)))
+                .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelBebidasLayout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addGap(86, 86, 86))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBebidasLayout.createSequentialGroup()
+                        .addComponent(jLabel18)
+                        .addGap(71, 71, 71))))
+            .addGroup(panelBebidasLayout.createSequentialGroup()
+                .addGap(503, 503, 503)
+                .addComponent(jLabel15)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelBebidasLayout.setVerticalGroup(
+            panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBebidasLayout.createSequentialGroup()
+                .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelBebidasLayout.createSequentialGroup()
+                        .addGap(71, 71, 71)
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel18)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panelBebidasLayout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(filtroNomeBebida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel20)
+                            .addComponent(filtrarBebida))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel16)
+                            .addGroup(panelBebidasLayout.createSequentialGroup()
+                                .addComponent(jLabel21)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Bebida, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(quantidadeBebida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel19))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(adicionarBebida)
+                        .addGap(21, 21, 21)))
+                .addGap(127, 127, 127))
+        );
+
+        jTabbedPane1.addTab("Bebidas", panelBebidas);
+
+        tabelaCarrinhoPizza.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Tamanho", "Sabores", "Borda", "Valor"
+            }
+        ));
+        jScrollPane2.setViewportView(tabelaCarrinhoPizza);
+
+        jLabel37.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
+        jLabel37.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel37.setText("Pizzas adicionadas");
+
+        adicionarPizza.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        adicionarPizza.setForeground(new java.awt.Color(255, 102, 0));
+        adicionarPizza.setText("Adicionar pizza ao pedido");
+        adicionarPizza.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adicionarPizzaActionPerformed(evt);
+            }
+        });
+
+        editarPizza.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        editarPizza.setForeground(new java.awt.Color(255, 102, 0));
+        editarPizza.setText("Editar");
+        editarPizza.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarPizzaActionPerformed(evt);
+            }
+        });
+
+        tabelaCarrinhoBebida.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -1040,23 +1209,44 @@ public class VendaPizza extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "Tamanho", "Sabores", "Borda"
+                "Nome", "Quantidade", "Valor"
             }
         ));
-        jScrollPane2.setViewportView(tabelaCarrinho);
+        jScrollPane4.setViewportView(tabelaCarrinhoBebida);
 
-        jLabel37.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
-        jLabel37.setForeground(new java.awt.Color(255, 119, 26));
-        jLabel37.setText("Carrinho");
+        jLabel45.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
+        jLabel45.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel45.setText("Bebidas adicionadas");
 
-        btn_ConcluirPedido1.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
-        btn_ConcluirPedido1.setForeground(new java.awt.Color(255, 102, 0));
-        btn_ConcluirPedido1.setText("Adicionar pizza ao carrinho");
-        btn_ConcluirPedido1.addActionListener(new java.awt.event.ActionListener() {
+        removerSabor.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        removerSabor.setForeground(new java.awt.Color(255, 102, 0));
+        removerSabor.setText("Remover");
+        removerSabor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ConcluirPedido1ActionPerformed(evt);
+                removerSaborActionPerformed(evt);
             }
         });
+
+        atualizarBebida.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        atualizarBebida.setForeground(new java.awt.Color(255, 102, 0));
+        atualizarBebida.setText("Editar");
+        atualizarBebida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                atualizarBebidaActionPerformed(evt);
+            }
+        });
+
+        removerBebida.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
+        removerBebida.setForeground(new java.awt.Color(255, 102, 0));
+        removerBebida.setText("Remover");
+        removerBebida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removerBebidaActionPerformed(evt);
+            }
+        });
+
+        totalPedido.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
+        totalPedido.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1066,54 +1256,52 @@ public class VendaPizza extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(61, 61, 61)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(95, 95, 95)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(57, 57, 57)
-                                        .addComponent(jLabel12))
-                                    .addComponent(jLabel11))
-                                .addGap(66, 66, 66)
-                                .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2)
-                                .addGap(120, 120, 120)
-                                .addComponent(jLabel27)
-                                .addGap(91, 91, 91)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(34, 34, 34))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(btn_Sair)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel4)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txf_Total, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(btn_reset)))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btn_ConcluirPedido)
-                                    .addGap(51, 51, 51)))
+                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(119, 119, 119)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(57, 57, 57)
+                                .addComponent(jLabel12))
+                            .addComponent(jLabel11))
+                        .addGap(245, 245, 245)
+                        .addComponent(jLabel14)
+                        .addGap(216, 216, 216)
+                        .addComponent(jLabel13)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel37)
+                        .addGap(100, 100, 100))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(adicionarPizza)
+                        .addGap(120, 120, 120))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel37)
-                                .addGap(170, 170, 170))
+                                .addComponent(cancelar)
+                                .addGap(18, 18, 18)
+                                .addComponent(concluirPedido))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btn_ConcluirPedido1)
-                                .addGap(128, 128, 128))
+                                .addComponent(removerSabor)
+                                .addGap(18, 18, 18)
+                                .addComponent(editarPizza))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addGap(131, 131, 131)))))
+                                .addComponent(removerBebida)
+                                .addGap(18, 18, 18)
+                                .addComponent(atualizarBebida))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel45)
+                                .addGap(58, 58, 58))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(totalPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(34, 34, 34)))
                 .addComponent(jLabel5))
         );
         layout.setVerticalGroup(
@@ -1122,104 +1310,117 @@ public class VendaPizza extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(9, 9, 9)
+                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(28, 28, 28)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(9, 9, 9)
-                                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(13, 13, 13)
-                                                .addComponent(jLabel13))))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel27)
-                                            .addComponent(jLabel2)))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(btn_ConcluirPedido1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel37)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(20, 20, 20)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel4)
-                                    .addComponent(txf_Total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btn_ConcluirPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btn_reset))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btn_Sair)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(jLabel13)
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(20, 20, 20))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(296, 296, 296)
+                        .addComponent(jLabel45)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(atualizarBebida)
+                            .addComponent(removerBebida)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(adicionarPizza, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel37)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(editarPizza)
+                            .addComponent(removerSabor))))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(totalPedido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(concluirPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cancelar))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Sabores");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void btn_resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetActionPerformed
-        buttonGroup1.clearSelection();
-        for (JCheckBox checkbox : checkboxList) {
-            checkbox.setSelected(false);
-        }
-        for(JFormattedTextField formmaterfield : formattedTextFieldList){
-            formmaterfield.setText("");
-        }
-        jComboBox1.setSelectedIndex(0);
-        txf_Total.setText("");
-    }//GEN-LAST:event_btn_resetActionPerformed
 
-    private void btn_SairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SairActionPerformed
+    private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
         System.exit(0);
-    }//GEN-LAST:event_btn_SairActionPerformed
+    }//GEN-LAST:event_cancelarActionPerformed
 
-    private void btn_ConcluirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ConcluirPedidoActionPerformed
-//        Pedido pedido = new Pedido(tamanho,retornaSabores(),retornaBebidas(),retornaBorda(),calcularValorTotal());
-//        List<Pedido> pedidos = new ArrayList<>();
-//        pedidos.add(pedido);
-//        DadosDoCliente principal = new DadosDoCliente(user, pedidos);
-//        principal.setVisible(true);
-    }//GEN-LAST:event_btn_ConcluirPedidoActionPerformed
+    private void concluirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_concluirPedidoActionPerformed
+        if(clienteSelecionado != null){
+            if(enderecoSelecionado != null){
+            List<Pedido> pedidos = new ArrayList<>();
+            pedidoDAO = new PedidoDAO();
+            NotaFiscal nf = new NotaFiscal(clienteSelecionado.getId(), enderecoSelecionado.getId());
+            for(PizzaMontada pizza: listaDePizzasMontadas){
+                Pedido pedido = new Pedido(pizza.getTamanho(),pizza.getSabores(),pizza.getBorda(),pizza.getValorTotal());
+                pedidos.add(pedido);
+            }
+            if(listaDeBebidasSelecionadas != null){
+                Pedido pedido = new Pedido(listaDeBebidasSelecionadas,calcularValorTotal());
+                pedidos.add(pedido);
+            } 
+            try {
+                    pedidoDAO.inserirNotaFiscal(nf, pedidos);
+                    JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso!");
+                } catch (SQLException ex) {
+                    Logger.getLogger(VendaPizza.class.getName()).log(Level.SEVERE, null, ex);
+                }    
+            }else{
+                JOptionPane.showMessageDialog(null, "Necessario escolher um endereco.","Atenção",JOptionPane.WARNING_MESSAGE);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Necessario escolher um cliente.","Atenção",JOptionPane.WARNING_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_concluirPedidoActionPerformed
 
-    private void quantidade1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantidade1ActionPerformed
-
-    }//GEN-LAST:event_quantidade1ActionPerformed
-
-    private void btn_cadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cadastrarActionPerformed
-        String descricao=tDescricao.getText();
+    private void cadastrarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarEnderecoActionPerformed
+        String rua=tRua.getText();
         String cep= tCEP.getText();
         String bairro=tBairro.getText();
-        int numero=0;
-        int codigo=0;
+        String numeroEmString =tNumero.getText();
+        int numero = 0;
         float total=0;     
 
         try {
-            numero=Integer.parseInt(tNumero.getText());  
+            numero = Integer.parseInt(tNumero.getText());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Número não informado.","Atenção",JOptionPane.WARNING_MESSAGE);
-            return;
+            JOptionPane.showMessageDialog(null, "Formato de Numero invalido.","Atenção",JOptionPane.WARNING_MESSAGE);
         }
+
         if(numero==0){
-            JOptionPane.showMessageDialog(null, "informe um numero.","Atenção",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Informe um Número.","Atenção",JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if(descricao.length()==0){
-            JOptionPane.showMessageDialog(null, "informe uma descrição.","Atenção",JOptionPane.WARNING_MESSAGE);
+        if(rua.length()==0){
+            JOptionPane.showMessageDialog(null, "Informe uma Rua.","Atenção",JOptionPane.WARNING_MESSAGE);
             return;
         }
         if(cep.length()==0){
-            JOptionPane.showMessageDialog(null, "informe um cep","Atenção",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Informe um CEP","Atenção",JOptionPane.WARNING_MESSAGE);
             return;
         }
           if(bairro.length()==0){
@@ -1228,14 +1429,14 @@ public class VendaPizza extends javax.swing.JFrame {
         }
                   
         try {
-            Endereco enderecoNovo = new Endereco(descricao,cep, bairro, numero,codigo);
-            clienteDAO.adicionarEndereco(enderecoNovo, cliente.getId());
-            JOptionPane.showMessageDialog(null, "Pessoa cadastrada");
-            tDescricao.setText("");
+            Endereco enderecoNovo = new Endereco(rua,cep, bairro, numero,clienteSelecionado.getId());
+            clienteDAO.adicionarEndereco(enderecoNovo, clienteSelecionado.getId());
+            JOptionPane.showMessageDialog(null, "Endereço cadastrado!");
+            tRua.setText("");
             tCEP.setText("");
             tBairro.setText("");
             tNumero.setText("");
-            atualizarTabela(); 
+            atualizarTabelaEndereco("","",""); 
         } catch (SQLException ex) {
             ex.printStackTrace();
              JOptionPane.showMessageDialog(null, "Erro ao inserir no bd","Erro", JOptionPane.ERROR_MESSAGE);   
@@ -1311,27 +1512,27 @@ public class VendaPizza extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao gerar pedido:" + ex.getMessage(), "Aviso", JOptionPane.WARNING_MESSAGE);
         }
         */
-    }//GEN-LAST:event_btn_cadastrarActionPerformed
+    }//GEN-LAST:event_cadastrarEnderecoActionPerformed
 
-    private void jDescricaoBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDescricaoBuscaActionPerformed
+    private void filtroRuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtroRuaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jDescricaoBuscaActionPerformed
+    }//GEN-LAST:event_filtroRuaActionPerformed
 
-    private void btn_excluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_excluirActionPerformed
-        int linha =tabela.getSelectedRow();
+    private void excluirEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excluirEnderecoActionPerformed
+        int linha = tabelaEndereco.getSelectedRow();
         if(linha<0){
             JOptionPane.showMessageDialog(null, "Selecione um endereço","Atenção", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        Endereco enderecoSelecionado = enderecos.get(linha);
+        Endereco enderecoSelecionado = listaDeEnderecos.get(linha);
         try {
-            clienteDAO.removerEndereco(enderecoSelecionado.getCodigo());
+            clienteDAO.removerEndereco(enderecoSelecionado.getId());
             JOptionPane.showMessageDialog(null, "Endereço excluído!");
-            atualizarTabela();
+            atualizarTabelaEndereco("","","");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-    }//GEN-LAST:event_btn_excluirActionPerformed
+    }//GEN-LAST:event_excluirEnderecoActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         
@@ -1341,22 +1542,330 @@ public class VendaPizza extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonDocesActionPerformed
 
-    private void jTextField10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField10ActionPerformed
+    private void cadastroNomeClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroNomeClienteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField10ActionPerformed
+    }//GEN-LAST:event_cadastroNomeClienteActionPerformed
 
-    private void jTextField11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField11ActionPerformed
+    private void cadastroTelefoneClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroTelefoneClienteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField11ActionPerformed
+    }//GEN-LAST:event_cadastroTelefoneClienteActionPerformed
 
-    private void jTextField13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField13ActionPerformed
+    private void adicionarPizzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarPizzaActionPerformed
+        AdicionarPedido principal = new AdicionarPedido(clienteSelecionado, listaDePizzasMontadas, listaDeBebidasSelecionadas, enderecoSelecionado);
+        principal.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_adicionarPizzaActionPerformed
+
+    private void cadastroClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroClienteActionPerformed
+        String nomeCliente = cadastroNomeCliente.getText();
+        String telefoneCliente = cadastroTelefoneCliente.getText();
+        Date auxCadastoDataDeNascimentoCliente = null;  
+        if(cadastroDataDeNascimentoCliente.getDate() != null){
+            try {
+                auxCadastoDataDeNascimentoCliente = new java.sql.Date(cadastroDataDeNascimentoCliente.getDate().getTime());
+                clienteDAO.inserirCliente(nomeCliente, telefoneCliente, auxCadastoDataDeNascimentoCliente);
+                JOptionPane.showMessageDialog(null, "Cliente cadastrado!");
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_cadastroClienteActionPerformed
+
+    private void filtrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarClienteActionPerformed
+        atualizarTabelaCliente(filtroNomeCliente.getText(),filtroTelefoneCliente.getText());
+    }//GEN-LAST:event_filtrarClienteActionPerformed
+
+    private void editarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarClienteActionPerformed
+        int linha = tabelaCliente.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um cliente para editar", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Cliente cliente = listaClientes.get(linha);
+        try {
+            TableModel model = tabelaCliente.getModel();
+            cliente.setNome((String) model.getValueAt(linha, 0));
+            cliente.setTelefone((String) model.getValueAt(linha, 1));
+            String formatoEntrada = "dd/MM/yyyy";
+            SimpleDateFormat sdfEntrada = new SimpleDateFormat(formatoEntrada);
+            Date data = (Date) sdfEntrada.parse((String) model.getValueAt(linha,2));
+            cliente.setDataDeNascimento(data);
+            clienteDAO.editarCliente(cliente);
+            atualizarTabelaCliente("", "");
+            JOptionPane.showMessageDialog(null, "Fornecedor atualizado com sucesso!");
+        } catch (SQLException | ParseException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_editarClienteActionPerformed
+
+    private void excluirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excluirClienteActionPerformed
+        int linha = tabelaCliente.getSelectedRow();
+        Cliente cliente = listaClientes.get(linha);
+        try{
+            clienteDAO.removerCliente(cliente.getId());
+            atualizarTabelaCliente("","");
+             JOptionPane.showMessageDialog(null, "Cliente removido com sucesso!");
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_excluirClienteActionPerformed
+
+    private void selecionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecionarClienteActionPerformed
+        int linha = tabelaCliente.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um cliente na tabela primeiro", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        this.clienteSelecionado = listaClientes.get(linha);
+        if(this.clienteSelecionado != null){
+            JOptionPane.showMessageDialog(null, "Cliente selecionado!");
+        }
+        atualizarTabelaEndereco("","","");
+    }//GEN-LAST:event_selecionarClienteActionPerformed
+
+    private void atualizarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarEnderecoActionPerformed
+        int linha = tabelaEndereco.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um cliente para editar", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Endereco enderecoEscolhido = listaDeEnderecos.get(linha);
+        try {
+            TableModel model = tabelaEndereco.getModel();
+            enderecoEscolhido.setRua((String) model.getValueAt(linha, 0));
+            enderecoEscolhido.setCep((String) model.getValueAt(linha, 1));
+            enderecoEscolhido.setBairro((String) model.getValueAt(linha, 2));
+            enderecoEscolhido.setNumero(Integer.parseInt((String) model.getValueAt(linha, 3)));
+            clienteDAO.atualizarEndereco(enderecoEscolhido);
+            atualizarTabelaCliente("", "");
+            JOptionPane.showMessageDialog(null, "Fornecedor atualizado com sucesso!");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_atualizarEnderecoActionPerformed
+
+    private void filtrarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarEnderecoActionPerformed
+       atualizarTabelaEndereco(filtroRua.getText(), filtroBairro.getText(), filtroCep.getText());
+    }//GEN-LAST:event_filtrarEnderecoActionPerformed
+
+    private void editarPizzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarPizzaActionPerformed
+        int linha = tabelaCarrinhoPizza.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um pedido para editar", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        AdicionarPedido principal = new AdicionarPedido(clienteSelecionado, listaDePizzasMontadas, linha,listaDeBebidasSelecionadas, enderecoSelecionado);
+        principal.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_editarPizzaActionPerformed
+
+    private void removerSaborActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerSaborActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField13ActionPerformed
+    }//GEN-LAST:event_removerSaborActionPerformed
 
-    private void btn_ConcluirPedido1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ConcluirPedido1ActionPerformed
+    private void atualizarBebidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarBebidaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_ConcluirPedido1ActionPerformed
+    }//GEN-LAST:event_atualizarBebidaActionPerformed
 
+    private void removerBebidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerBebidaActionPerformed
+        int linha = tabelaCarrinhoBebida.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione uma bebida para remover");
+            return;
+        }
+        Bebida bebidaSelecionada = listaDeBebidasSelecionadas.get(linha);
+        listaDeBebidasSelecionadas.remove(bebidaSelecionada);
+        atualizarTabelaCarrinhoBebida();
+    }//GEN-LAST:event_removerBebidaActionPerformed
+
+    private void adicionarBebidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarBebidaActionPerformed
+        int linha =tabelaBebida.getSelectedRow();
+        if(linha<0){
+            JOptionPane.showMessageDialog(null, "Selecione uma bebida para adicionar");
+            return;
+        }
+        if(listaDeBebidasSelecionadas == null){
+            listaDeBebidasSelecionadas = new ArrayList<>();
+        }
+        Bebida bebidaSelecionada = listaDeBebidas.get(linha); 
+        if(!quantidadeBebida.getText().equals("")){
+            if(Integer.parseInt(quantidadeBebida.getText()) > 0){
+                bebidaSelecionada.setQuantidade(Integer.parseInt(quantidadeBebida.getText()));
+                listaDeBebidasSelecionadas.add(bebidaSelecionada);
+                atualizarTabelaBebida("");
+                atualizarTabelaCarrinhoBebida();
+            }else{
+                JOptionPane.showMessageDialog(null, "Selecione uma quantidade valida");
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Necessário inserir a quantidade de bebida que deseja adicionar");
+
+        }         
+    }//GEN-LAST:event_adicionarBebidaActionPerformed
+
+    private void filtrarBebidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarBebidaActionPerformed
+        atualizarTabelaBebida(filtroNomeBebida.getText());
+    }//GEN-LAST:event_filtrarBebidaActionPerformed
+
+    private void selecionarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecionarEnderecoActionPerformed
+        int linha = tabelaEndereco.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um endereco na tabela primeiro", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        enderecoSelecionado = listaDeEnderecos.get(linha);
+        if(enderecoSelecionado != null){
+            JOptionPane.showMessageDialog(null, "Endereço selecionado!");
+        }
+    }//GEN-LAST:event_selecionarEnderecoActionPerformed
+    private void atualizarTabelaCliente(String nomeCliente, String telefoneCliente) {
+        try {
+            listaClientes = clienteDAO.buscaListaClientes(nomeCliente, telefoneCliente);
+            DefaultTableModel model = (DefaultTableModel) tabelaCliente.getModel();
+            model.setNumRows(0);
+            for (int i = 0; i < listaClientes.size(); i++) {
+                Cliente cliente = listaClientes.get(i);
+                String nome = cliente.getNome();
+                String telefone = cliente.getTelefone();
+
+                model.addRow(new Object[]{nome, telefone});            
+            }
+            corColunasTabela(tabelaCliente, 0);
+            corColunasTabelaCenter(tabelaCliente, 1);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    private void atualizarTabelaEndereco(String ruaAtualizada, String bairroAtualizado, String cepAtualizado) {
+        try {
+            listaDeEnderecos = clienteDAO.buscaEndereco(ruaAtualizada, bairroAtualizado, cepAtualizado, clienteSelecionado.getId());
+            DefaultTableModel model = (DefaultTableModel) tabelaEndereco.getModel();
+            model.setNumRows(0);
+            if(listaDeEnderecos != null){
+                for (int i = 0; i < listaDeEnderecos.size(); i++) {
+                    Endereco endereco = listaDeEnderecos.get(i);
+                    String rua = endereco.getRua();
+                    String bairro = endereco.getBairro();
+                    String cep = endereco.getCep();
+                    int numero = endereco.getNumero();
+
+                    model.addRow(new Object[]{rua, cep, bairro, numero});            
+                }
+            }
+            corColunasTabela(tabelaEndereco, 0);
+            corColunasTabelaCenter(tabelaEndereco, 1);
+            corColunasTabelaCenter(tabelaEndereco, 2);
+            corColunasTabelaCenter(tabelaEndereco, 3);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    private void atualizarTabelaBebida(String nomeBebida) {
+        try {
+            listaDeBebidas = bebidaDAO.buscarBebida(nomeBebida);
+            DefaultTableModel model = (DefaultTableModel) tabelaBebida.getModel();
+            model.setNumRows(0);
+            if(listaDeBebidas != null){
+               for (int i = 0; i < listaDeBebidas.size(); i++) {
+                    Bebida bebida = listaDeBebidas.get(i);
+                    String nome = bebida.getNome();
+                    BigDecimal preco = bebida.getPreco();
+
+                    model.addRow(new Object[]{nome, preco});            
+                } 
+            }
+            
+            corColunasTabela(tabelaBebida, 0);
+            corColunasTabelaCenter(tabelaBebida, 1);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    private void atualizarTabelaCarrinhoPizza() {
+        DefaultTableModel model = (DefaultTableModel) tabelaCarrinhoPizza.getModel();
+        model.setNumRows(0);
+        if(listaDePizzasMontadas != null){
+            for (int i = 0; i < listaDePizzasMontadas.size(); i++) {
+                PizzaMontada pizza = listaDePizzasMontadas.get(i);
+                model.addRow(new Object[]{pizza.getTamanho(), pizza.concatenaPizzas(), pizza.getBorda(), pizza.getValorTotal()});
+            }
+        }        
+    }
+    private void atualizarTabelaCarrinhoBebida() {
+        DefaultTableModel model = (DefaultTableModel) tabelaCarrinhoBebida.getModel();
+        model.setNumRows(0);
+        if(listaDeBebidasSelecionadas != null){
+            for (Bebida bebida : listaDeBebidasSelecionadas) {
+                model.addRow(new Object[]{bebida.getNome(), bebida.getQuantidade(), bebida.getPreco().multiply(new BigDecimal(bebida.getQuantidade()))});
+            } 
+        }
+              
+    }
+    private BigDecimal calcularValorTotal(){
+        double total = 0;
+       
+        return new BigDecimal(total);
+    }
+    private void corColunasTabelaCenter(JTable table, int i) {
+        VendaPizza.LinhaRendererCenter linhaRenderer = new VendaPizza.LinhaRendererCenter();
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(i).setCellRenderer(linhaRenderer);
+    }
+    
+    private void corColunasTabela(JTable table, int i) {
+        LinhaRenderer linhaRenderer = new LinhaRenderer();
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(i).setCellRenderer(linhaRenderer);
+    }
+
+    public class LinhaRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            // Defina a cor de fundo e a cor do texto da linha desejada
+            if (isSelected) {
+                component.setBackground(table.getSelectionBackground());
+                component.setForeground(table.getSelectionForeground());
+            } else {
+                if (row % 2 == 0) { // Por exemplo, linhas pares terão cor de fundo diferente
+                    component.setBackground(Color.DARK_GRAY);
+                    component.setForeground(table.getForeground());
+                } else {
+                    component.setBackground(Color.GRAY);
+                    component.setForeground(Color.WHITE);
+                     // Cor do texto padrão
+                }
+            }
+
+            return component;
+        }
+    }
+    public class LinhaRendererCenter extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            // Defina a cor de fundo e a cor do texto da linha desejada
+            if (isSelected) {
+                component.setBackground(table.getSelectionBackground());
+                component.setForeground(table.getSelectionForeground());
+            } else {
+                if (row % 2 == 0) { // Por exemplo, linhas pares terão cor de fundo diferente
+                    component.setBackground(Color.DARK_GRAY);
+                    component.setForeground(table.getForeground());
+                } else {
+                    component.setBackground(Color.GRAY);
+                    component.setForeground(Color.WHITE);
+                     // Cor do texto padrão
+                }
+            }
+
+            return component;
+        }
+    }
    //------------------------------FUNCOES----------------------------------------------
 //    private void updateCheckboxState() {
 //        int selectedCount = 0;
@@ -1389,113 +1898,57 @@ public class VendaPizza extends javax.swing.JFrame {
 //            }
 //        }
 //    }
-    private void adicionaBebidas(Component[] components){
-        for (Component component : components) {
-            if (component instanceof JFormattedTextField) {
-                JFormattedTextField formattedField = (JFormattedTextField) component;
-                formattedTextFieldList.add(formattedField);
-            }
-        }
-    }
-    private String retornaBebidas(){
-        if (!quantidade1.getText().isEmpty()) {
-            int quantidade = Integer.parseInt(quantidade1.getText());
-            Bebidas bebida = new Bebidas("Coca-Cola Original 2l", quantidade, new BigDecimal("12"));
-            listaDeBebidas.add(bebida);
-        }
-        if (!quantidade2.getText().isEmpty()) {
-            int quantidade = Integer.parseInt(quantidade2.getText());
-            Bebidas bebida = new Bebidas("Sprite Pet 2l C/Açucar", quantidade, new BigDecimal("10"));
-            listaDeBebidas.add(bebida);
-        }
-        if (!quantidade3.getText().isEmpty()) {
-            int quantidade = Integer.parseInt(quantidade3.getText());
-            Bebidas bebida = new Bebidas("Fanta Laranja 2l", quantidade, new BigDecimal("10"));
-            listaDeBebidas.add(bebida);
-        }
-        if (!quantidade4.getText().isEmpty()) {
-            int quantidade = Integer.parseInt(quantidade4.getText());
-            Bebidas bebida = new Bebidas("Kuat Guaraná 2l", quantidade, new BigDecimal("9"));
-            listaDeBebidas.add(bebida);
-        }
-        if (!quantidade5.getText().isEmpty()) {
-            int quantidade = Integer.parseInt(quantidade5.getText());
-            Bebidas bebida = new Bebidas("Coca-Cola Original 350ml", quantidade, new BigDecimal("4.5"));
-            listaDeBebidas.add(bebida);
-        }
-        StringBuilder sb = new StringBuilder();
-        for (Bebidas bebida : listaDeBebidas) {
-            sb.append(bebida.getQuantidade()+"x - ").append(bebida.getNome()).append("; ");
-        }
-        return sb.toString();
-    }
+//    private String retornaBebidas(){
+//        
+////        StringBuilder sb = new StringBuilder();
+////        for (Bebida bebida : listaDeBebidas) {
+////            sb.append(bebida.getQuantidade()+"x - ").append(bebida.getNome()).append("; ");
+////        }
+////        return sb.toString();
+//    }
   
-    private void atualizarTabela() {
-        try {
-            enderecos = clienteDAO.buscaEnderecoPelaDescricao(jDescricaoBusca.getText(), cliente.getId());
-
-            DefaultTableModel model = (DefaultTableModel) tabela.getModel();
-            model.setNumRows(0);
-            for (int i = 0; i < enderecos.size(); i++) {
-                Endereco pessoa = enderecos.get(i);
-                model.addRow(new Object[]{pessoa.getRua(), pessoa.getCep(), pessoa.getBairro(), pessoa.getNumero(),});
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }       
-    }
-    private void atualizarTabelaCarrinho() {
-        DefaultTableModel model = (DefaultTableModel) tabelaCarrinho.getModel();
-        model.setNumRows(0);
-        for (int i = 0; i < listaDePedidos.size(); i++) {
-            Pedido pedido = listaDePedidos.get(i);
-            model.addRow(new Object[]{pedido.getTamanho(), pedido.concatenaPizzas(), pedido.getBorda()});
-        }       
-    }
-    private BigDecimal calcularValorTotal(){
-        double total = 0;
-        if(!quantidade1.getText().isEmpty()){
-            total += 12*Integer.parseInt(quantidade1.getText());
-        }
-        if(!quantidade2.getText().isEmpty()){
-            total += 10*Integer.parseInt(quantidade2.getText());
-        }
-        if(!quantidade3.getText().isEmpty()){
-            total += 10*Integer.parseInt(quantidade3.getText());
-        }
-        if(!quantidade4.getText().isEmpty()){
-            total += 9*Integer.parseInt(quantidade4.getText());
-        }
-        if(!quantidade5.getText().isEmpty()){
-            total += 4.5*Integer.parseInt(quantidade5.getText());
-        }
-        return new BigDecimal(total);
-    }
+    
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_ConcluirPedido;
-    private javax.swing.JButton btn_ConcluirPedido1;
-    private javax.swing.JButton btn_Sair;
-    private javax.swing.JButton btn_cadastrar;
-    private javax.swing.JButton btn_excluir;
-    private javax.swing.JButton btn_reset;
+    private javax.swing.JScrollPane Bebida;
+    private javax.swing.JButton adicionarBebida;
+    private javax.swing.JButton adicionarPizza;
+    private javax.swing.JButton atualizarBebida;
+    private javax.swing.JButton atualizarEndereco;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton cadastrarEndereco;
+    private javax.swing.JButton cadastroCliente;
+    private com.toedter.calendar.JDateChooser cadastroDataDeNascimentoCliente;
+    private javax.swing.JTextField cadastroNomeCliente;
+    private javax.swing.JTextField cadastroTelefoneCliente;
+    private javax.swing.JButton cancelar;
+    private javax.swing.JButton concluirPedido;
+    private javax.swing.JButton editarCliente;
+    private javax.swing.JButton editarPizza;
+    private javax.swing.JButton excluirCliente;
+    private javax.swing.JButton excluirEndereco;
+    private javax.swing.JButton filtrarBebida;
+    private javax.swing.JButton filtrarCliente;
+    private javax.swing.JButton filtrarEndereco;
+    private javax.swing.JTextField filtroBairro;
+    private javax.swing.JTextField filtroCep;
+    private javax.swing.JTextField filtroNomeBebida;
+    private javax.swing.JTextField filtroNomeCliente;
+    private javax.swing.JTextField filtroRua;
+    private javax.swing.JTextField filtroTelefoneCliente;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton8;
     private javax.swing.JRadioButton jButtonDoces;
     private javax.swing.JRadioButton jButtonDoces1;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JTextField jDescricaoBusca;
     private javax.swing.JLabel jDescricaoCadastro;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -1508,9 +1961,6 @@ public class VendaPizza extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
@@ -1531,6 +1981,9 @@ public class VendaPizza extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
+    private javax.swing.JLabel jLabel43;
+    private javax.swing.JLabel jLabel44;
+    private javax.swing.JLabel jLabel45;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1545,6 +1998,7 @@ public class VendaPizza extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton5;
+    private javax.swing.JScrollPane jScrollPane;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -1553,27 +2007,24 @@ public class VendaPizza extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable3;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField16;
-    private javax.swing.JTextField jTextField18;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel panelBebidas;
+    private javax.swing.JPanel panelCliente;
     private javax.swing.JPanel panelEnderecos;
-    private javax.swing.JPanel panelRefrigerantes;
-    private javax.swing.JPanel panelSabores;
-    private javax.swing.JFormattedTextField quantidade1;
-    private javax.swing.JFormattedTextField quantidade2;
-    private javax.swing.JFormattedTextField quantidade3;
-    private javax.swing.JFormattedTextField quantidade4;
-    private javax.swing.JFormattedTextField quantidade5;
+    private javax.swing.JTextField quantidadeBebida;
+    private javax.swing.JButton removerBebida;
+    private javax.swing.JButton removerSabor;
+    private javax.swing.JButton selecionarCliente;
+    private javax.swing.JButton selecionarEndereco;
     private javax.swing.JTextField tBairro;
     private javax.swing.JTextField tCEP;
-    private javax.swing.JTextField tDescricao;
     private javax.swing.JTextField tNumero;
-    private javax.swing.JTable tabela;
-    private javax.swing.JTable tabelaCarrinho;
+    private javax.swing.JTextField tRua;
+    private javax.swing.JTable tabelaBebida;
+    private javax.swing.JTable tabelaCarrinhoBebida;
+    private javax.swing.JTable tabelaCarrinhoPizza;
     private javax.swing.JTable tabelaCliente;
-    private javax.swing.JTextField txf_Total;
+    private javax.swing.JTable tabelaEndereco;
+    private javax.swing.JTextField totalPedido;
     // End of variables declaration//GEN-END:variables
 }

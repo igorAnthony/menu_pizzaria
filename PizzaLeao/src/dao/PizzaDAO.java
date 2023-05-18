@@ -134,6 +134,41 @@ public class PizzaDAO {
 
         return listaDePizzas;
     }
+    public Pizza buscarPizzaPorNomeExato(String nomePizza) throws SQLException {
+        Connection connection = new Conexao().getConexao();
+        StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM pizza WHERE 1=1");
+
+        List<Object> parameterValues = new ArrayList<>();
+
+        if (nomePizza != null && !nomePizza.isEmpty()) {
+            sqlBuilder.append(" AND nome = ?");
+            parameterValues.add(nomePizza);
+        }
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sqlBuilder.toString());
+
+        for (int i = 0; i < parameterValues.size(); i++) {
+            Object parameterValue = parameterValues.get(i);
+            preparedStatement.setObject(i + 1, parameterValue);
+        }
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        Pizza pizza = null;
+
+        if (resultSet.next()) {
+            int pizzaId = resultSet.getInt("id");
+            String nome = resultSet.getString("nome");
+            String ingredientes = resultSet.getString("ingredientes");
+            String tipo = resultSet.getString("tipo");
+            pizza = new Pizza(pizzaId, nome, ingredientes, tipo);
+        }
+
+        resultSet.close();
+        preparedStatement.close();
+        connection.close();
+
+        return pizza;
+    }
 
     
     public List<Pizza> buscarListaDePizzas() throws SQLException {

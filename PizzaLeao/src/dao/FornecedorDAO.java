@@ -29,13 +29,37 @@ public class FornecedorDAO {
             preparedStatement.setString(2, telefone);
 
             preparedStatement.executeUpdate();
-
+            connection.commit(); // Commit da transação
             preparedStatement.close();
             connection.close();
         } catch (SQLException e) {
+            connection.rollback();
             e.printStackTrace();
         }
     }
+
+    public void editarFornecedor(Fornecedor fornecedor) throws SQLException {
+        Connection connection = new Conexao().getConexao();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE fornecedor SET nome = ?, telefone = ? WHERE id = ?");
+
+            preparedStatement.setString(1, fornecedor.getNome());
+            preparedStatement.setString(2, fornecedor.getTelefone());
+            preparedStatement.setInt(3, fornecedor.getId());
+
+            preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+            connection.commit(); // Commit da transação
+            connection.close();
+        } catch (SQLException e) {
+            connection.rollback();
+            e.printStackTrace();
+        }
+    }
+    
+
     public Fornecedor buscarFornecedorPorId(int id) throws SQLException {
         Connection connection = new Conexao().getConexao();
         Fornecedor fornecedor = null;
@@ -110,16 +134,34 @@ public class FornecedorDAO {
         Connection connection = new Conexao().getConexao();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM fornecedor WHERE id = ?");
+            // Verificar se existem despesas vinculadas ao fornecedor
+            PreparedStatement checkStatement = connection.prepareStatement("SELECT * FROM despesa WHERE id_fornecedor = ?");
+            checkStatement.setInt(1, idFornecedor);
+            ResultSet resultSet = checkStatement.executeQuery();
 
-            preparedStatement.setInt(1, idFornecedor);
+            if (resultSet.next()) {
+                // Existem despesas vinculadas ao fornecedor, lançar uma exceção
+                throw new SQLException("Não é possível remover o fornecedor enquanto houver despesas relacionadas a ele.");
+            }
 
-            preparedStatement.executeUpdate();
+            // Remover o fornecedor
+            PreparedStatement removeStatement = connection.prepareStatement("DELETE FROM fornecedor WHERE id = ?");
+            removeStatement.setInt(1, idFornecedor);
+            removeStatement.executeUpdate();
 
-            preparedStatement.close();
+            // Commit da transação
+            connection.commit();
+
+            // Fechar as conexões
+            resultSet.close();
+            checkStatement.close();
+            removeStatement.close();
             connection.close();
-        } catch (SQLException e) {
+        } catch (SQLException e) { 
+            connection.rollback(); 
             e.printStackTrace();
+           // Desfazer a transação em caso de exceção
         }
     }
+
 }

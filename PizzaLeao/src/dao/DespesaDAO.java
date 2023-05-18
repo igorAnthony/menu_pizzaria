@@ -12,9 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import jdbc.Conexao;
 import models.Despesa;
 
@@ -24,22 +24,29 @@ import models.Despesa;
  */
 public class DespesaDAO {
 
-        public void inserirDespesa(int idFornecedor, BigDecimal valor, LocalDate data, String descricao) throws SQLException {
+        public void inserirDespesa(int idFornecedor, String descricao, String valor, Date data) {
         Connection connection = new Conexao().getConexao();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO despesa (id_fornecedor, valor, data, descricao) VALUES (?, ?, ?, ?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO despesa (id_fornecedor, valor, data_vencimento, descricao) VALUES (?, ?, ?, ?)");
 
             preparedStatement.setInt(1, idFornecedor);
-            preparedStatement.setBigDecimal(2, valor);
-            preparedStatement.setDate(3, Date.valueOf(data));
+            preparedStatement.setBigDecimal(2, new BigDecimal(valor));
+            preparedStatement.setDate(3, data);
             preparedStatement.setString(4, descricao);
 
             preparedStatement.executeUpdate();
 
             preparedStatement.close();
+            connection.commit(); // Commit da transação
             connection.close();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao inserir a despesa. Por favor, tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -157,6 +164,7 @@ public class DespesaDAO {
             preparedStatement.close();
             connection.close();
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao buscar a despesa. Por favor, tente novamente mais tarde.", "Erro", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 

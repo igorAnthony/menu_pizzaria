@@ -15,14 +15,14 @@ public class Endereco {
     private String cep;
     private String bairro;
     private int numero;
-    private int codigo;
+    private int id;
 
-    public Endereco(String rua, String cep, String bairro, int numero, int codigo) {
+    public Endereco(String rua, String cep, String bairro, int numero, int id) {
         this.rua = rua;
         this.cep = cep;
         this.bairro = bairro;
         this.numero = numero;
-        this.codigo = codigo;
+        this.id = id;
     }
 
     public String getRua() {
@@ -57,12 +57,12 @@ public class Endereco {
         this.numero = numero;
     }
 
-    public int getCodigo() {
-        return codigo;
+    public int getId() {
+        return id;
     }
 
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class Endereco {
         hash = 31 * hash + Objects.hashCode(this.cep);
         hash = 31 * hash + Objects.hashCode(this.bairro);
         hash = 31 * hash + this.numero;
-        hash = 31 * hash + this.codigo;
+        hash = 31 * hash + this.id;
         return hash;
     }
 
@@ -91,7 +91,7 @@ public class Endereco {
         if (this.numero != other.numero) {
             return false;
         }
-        if (this.codigo != other.codigo) {
+        if (this.id != other.id) {
             return false;
         }
         if (!Objects.equals(this.rua, other.rua)) {
@@ -108,6 +108,6 @@ public class Endereco {
 
     @Override
     public String toString() {
-        return "Pessoa{" + "rua=" + rua + ", cep=" + cep + ", bairro=" + bairro + ", numero=" + numero + ", codigo=" + codigo + '}';
+        return "Pessoa{" + "rua=" + rua + ", cep=" + cep + ", bairro=" + bairro + ", numero=" + numero + ", codigo=" + id + '}';
     }
 }

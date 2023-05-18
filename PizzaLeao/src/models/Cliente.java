@@ -4,7 +4,7 @@
  */
 package models;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 /**
  *
@@ -14,9 +14,9 @@ public class Cliente {
     private int id;
     private String nome;
     private String telefone;
-    private LocalDate dataDeNascimento;  
+    private Date dataDeNascimento;  
     
-    public Cliente(int id, String nome, String telefone, LocalDate dataDeNascimento) {
+    public Cliente(int id, String nome, String telefone, Date dataDeNascimento) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
@@ -49,11 +49,11 @@ public class Cliente {
         this.nome = nome;
     }
 
-    public LocalDate getDataDeNascimento() {
+    public Date getDataDeNascimento() {
         return dataDeNascimento;
     }
 
-    public void setDataDeNascimento(LocalDate dataDeNascimento) {
+    public void setDataDeNascimento(Date dataDeNascimento) {
         this.dataDeNascimento = dataDeNascimento;
     }
 }

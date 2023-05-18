@@ -4,7 +4,7 @@ CREATE TABLE cliente (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255),
     telefone VARCHAR(20),
-    dataDeNascimento DATE
+    data_nascimento DATE
 );
 
 CREATE TABLE endereco ( id INT AUTO_INCREMENT PRIMARY KEY, rua VARCHAR(255) NOT NULL, cep VARCHAR(8) NOT NULL, bairro VARCHAR(255) NOT NULL, numero INT NOT NULL, id_cliente INT NOT NULL, FOREIGN KEY (id_cliente) REFERENCES cliente(id) );
@@ -52,10 +52,16 @@ CREATE TABLE despesa (
   CONSTRAINT fk_fornecedor FOREIGN KEY (id_fornecedor) REFERENCES fornecedor(id)
 );
 
-INSERT INTO cliente (nome, telefone, dataDeNascimento)
+CREATE TABLE bebida (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  preco DECIMAL(10, 2) NOT NULL
+);
+
+INSERT INTO cliente (nome, telefone, data_nascimento)
 VALUES ('João Silva', '(11) 98765-4321', '1990-05-10');
 
-INSERT INTO cliente (nome, telefone, dataDeNascimento)
+INSERT INTO cliente (nome, telefone, data_nascimento)
 VALUES ('Maria Souza', '(22) 99999-8888', '1985-09-15');
 
 INSERT INTO endereco (rua, cep, bairro, numero, id_cliente)
@@ -101,28 +107,36 @@ VALUES ('Romeu e Julieta', 'Molho de tomate, queijo mozarela, goiabada, queijo b
 INSERT INTO pizza (nome, ingredientes, tipo)
 VALUES ('Brigadeiro', 'Creme de brigadeiro, granulado de chocolate', 'DOCE');
 
+INSERT INTO fornecedor (nome, telefone) VALUES
+('Fornecedor A', '1234567890'),
+('Fornecedor B', '9876543210'),
+('Fornecedor C', '5555555555');
 
-INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (1, 1, 0.0);
+INSERT INTO despesa (id_fornecedor, valor, data_vencimento, data_pagto, descricao) VALUES
+(1, 100.00, '2023-05-20', '2023-05-18', 'Despesa 1'),
+(2, 250.50, '2023-06-05', '2023-06-03', 'Despesa 2'),
+(3, 500.25, '2023-05-30', '2023-05-28', 'Despesa 3');
+
+INSERT INTO bebida (nome, preco) VALUES
+('Cerveja', 2.50),
+('Vinho', 15.99),
+('Refrigerante', 1.99),
+('Coca-Cola 2l', 12.00);
+
+
+INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (1, 1, 74.0);
 INSERT INTO pedido (nota_fiscal_id, tamanho, pizzas, bebidas, borda, valor_total)
-VALUES (LAST_INSERT_ID(), 'Grande', 'Calabresa com Catupiry; Margherita de Bufala', '2x - Coca-Cola 2L', 'Catupiry', 100.0);
+VALUES (LAST_INSERT_ID(), 'Grande', 'Calabresa com Catupiry; Margherita de Bufala', NULL, 'Catupiry', 50.0);
+INSERT INTO pedido (nota_fiscal_id, tamanho, pizzas, bebidas, borda, valor_total)
+VALUES (LAST_INSERT_ID(), NULL, NULL, '2x | Coca-Cola 2l', NULL, 24.0);
 
-INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (1, 2, 0.0);
+INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (1, 2, 30.0);
 INSERT INTO pedido (nota_fiscal_id, tamanho, pizzas, bebidas, borda, valor_total)
 VALUES (LAST_INSERT_ID(), 'Média', 'Brigadeiro', NULL, 'Cheddar', 30.0);
 
-INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (2, 3, 0.0);
+INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (2, 3, 20.0);
 INSERT INTO pedido (nota_fiscal_id, tamanho, pizzas, bebidas, borda, valor_total)
-VALUES (LAST_INSERT_ID(), 'Pequena', 'Quatro Queijos', NULL, 'NULL', 30.0);
+VALUES (LAST_INSERT_ID(), 'Pequena', 'Quatro Queijos', NULL, NULL, 20.0);
 
 
 INSERT INTO usuario (nome, email, senha, nivel) VALUES ('João da Silva', 'teste', '123456', 'USER');
-
-Sedução
-Mussarela, leite condensado,
-chocolate branco, morango e
-creme de leite
-
-Sensacao
-Mussarela, leite condensado,
-chocolate preto, morango e
-creme de leite

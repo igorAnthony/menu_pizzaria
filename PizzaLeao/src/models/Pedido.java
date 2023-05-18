@@ -18,23 +18,20 @@ public class Pedido {
     private int notaFiscalId;
     private String tamanho;
     private List<Pizza> sabores;
-    private String bebidas;
+
+    public void setSabores(List<Pizza> sabores) {
+        this.sabores = sabores;
+    }
+    private List<Bebida> bebidas;
     private String borda;
     private BigDecimal valorTotal;
     private String nomeCliente;
-
-    public String getNomeCliente() {
-        return nomeCliente;
-    }
-
-    public void setNomeCliente(String nomeCliente) {
-        this.nomeCliente = nomeCliente;
-    }
-    
-    public Pedido(String tamanho, List<Pizza> pizzas, String bebidas, String borda, BigDecimal valorTotal) {
+   
+    public Pedido(int id, int notaFiscalId, String tamanho, List<Pizza> pizzas, String borda, BigDecimal valorTotal) {
+        this.id = id;
+        this.notaFiscalId = notaFiscalId;
         this.tamanho = tamanho;
         this.sabores = pizzas;
-        this.bebidas = bebidas;
         this.borda = borda;
         this.valorTotal = valorTotal;
     }
@@ -44,19 +41,19 @@ public class Pedido {
         this.borda = borda;
         this.valorTotal = valorTotal;
     }
-//    public Pedido(String tamanho, String pizzas, String bebidas, String borda, BigDecimal valorTotal) {
-//        this.tamanho = tamanho;
-//        this.pizzas = pizzas;
-//        this.bebidas = bebidas;
-//        this.borda = borda;
-//        this.valorTotal = valorTotal;
-//    }
-//    public Pedido(String tamanho, String pizzas, String borda, BigDecimal valorTotal) {
-//        this.tamanho = tamanho;
-//        this.pizzas = pizzas;
-//        this.borda = borda;
-//        this.valorTotal = valorTotal;
-//    }
+    public Pedido(int id, int notaFiscalId, List<Bebida> bebidas, BigDecimal valorTotal) {
+        this.id = id;
+        this.notaFiscalId = notaFiscalId;
+        this.bebidas = bebidas;
+        this.valorTotal = valorTotal;
+    }
+    public Pedido(List<Bebida> bebidas, BigDecimal valorTotal) {
+        this.id = id;
+        this.notaFiscalId = notaFiscalId;
+        this.bebidas = bebidas;
+        this.valorTotal = valorTotal;
+    }
+
     public int getId() {
         return id;
     }
@@ -95,12 +92,21 @@ public class Pedido {
         }
         return sb.toString();
     }
-
-    public String getBebidas() {
+    public String concatenarBebidas() {
+        StringBuilder sb = new StringBuilder();
+        for (Bebida bebida : bebidas) {
+            sb.append(bebida.getQuantidade()).append("x | ").append(bebida.getNome()).append("; ");
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1); // Remove a última vírgula
+        }
+        return sb.toString();
+    }
+    public List<Bebida> getBebidas() {
         return bebidas;
     }
 
-    public void setBebidas(String bebidas) {
+    public void setBebidas(List<Bebida> bebidas) {
         this.bebidas = bebidas;
     }
 
@@ -118,6 +124,13 @@ public class Pedido {
 
     public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
+    }
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void setNomeCliente(String nomeCliente) {
+        this.nomeCliente = nomeCliente;
     }
 }
 

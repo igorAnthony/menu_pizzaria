@@ -412,7 +412,7 @@ public class DadosDoCliente extends javax.swing.JFrame {
     }
     private int retornaIdEndereco(int linha){
         Endereco enderecoSelecionado = enderecos.get(linha);
-        return enderecoSelecionado.getCodigo();
+        return enderecoSelecionado.getId();
     }
     private BigDecimal calculaValorTotalDoPedido(){
         BigDecimal valorTotal = BigDecimal.ZERO;

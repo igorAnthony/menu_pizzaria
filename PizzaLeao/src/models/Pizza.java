@@ -13,7 +13,7 @@ public class Pizza {
     private String nome;
     private String ingredientes;
     private String tipo;
-
+    
     public Pizza(int id, String nome, String ingredientes, String tipo) {
         this.id = id;
         this.nome = nome;

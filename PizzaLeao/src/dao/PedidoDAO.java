@@ -14,6 +14,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import jdbc.Conexao;
+import dao.BebidaDAO;
+import models.Bebida;
 import models.NotaFiscal;
 import models.Pedido;
 import models.Pizza;
@@ -46,27 +48,56 @@ public class PedidoDAO {
         ps.setInt(1, notaFiscalId);
         ResultSet rs = ps.executeQuery();
         List<Pedido> listaDePedidos = new ArrayList<>();
+        Pedido pedido = null;
         while (rs.next()) {
             int pedidoId = rs.getInt("id");
             String tamanho = rs.getString("tamanho");
             String pizzas = rs.getString("pizzas");
-            String bebidas = rs.getString("bebidas");
+            String bebidasEmString = rs.getString("bebidas");
             String borda = rs.getString("borda");
             BigDecimal valorTotal = rs.getBigDecimal("valor_total");
-            
-            String[] nomesPizzas = pizzas.split(";");
 
-            List<Pizza> listaDePizzas = new ArrayList<>();
+            pedido = null;
 
-            for (String nomePizza : nomesPizzas) {
-                List<Pizza> pizzasEncontradas = new PizzaDAO().buscarListaDePizzas(nomePizza.trim(),"");
-                listaDePizzas.addAll(pizzasEncontradas);
-            }
-            // Obter sabores do pedido
-            Pedido pedido = new Pedido(tamanho,listaDePizzas, bebidas, borda, valorTotal);
-            pedido.setId(pedidoId);
-            pedido.setNotaFiscalId(notaFiscalId);
-            listaDePedidos.add(pedido);
+            if (pizzas != null && !pizzas.isEmpty()) {
+                
+                List<Pizza> listaDePizzas = new ArrayList<>();
+
+                String[] nomesPizzas = pizzas.split(";");
+
+                for (String nomePizza : nomesPizzas) {
+                    Pizza pizzaEncontrada = new PizzaDAO().buscarPizzaPorNomeExato(nomePizza.trim());
+                    if(pizzaEncontrada != null){
+                        listaDePizzas.add(pizzaEncontrada);
+                    }
+                }
+
+                pedido = new Pedido(pedidoId, notaFiscalId, tamanho, listaDePizzas, borda, valorTotal);
+                listaDePedidos.add(pedido);
+            } else if (bebidasEmString != null && !bebidasEmString.isEmpty()) {
+                List<Bebida> listaDeBebidas = new ArrayList<>();
+                
+                String[] bebidas = bebidasEmString.split(";");
+               
+                for (String bebida : bebidas) {
+                    String[] partes = bebida.split("\\|");
+
+                    String quantidadeString = partes[0].trim().replace("x", "");
+                    int quantidade = Integer.parseInt(quantidadeString);
+
+                    String nome = partes[1].trim();
+                    Bebida bebidaEncontrada = new BebidaDAO().buscarBebidaPorNomeExato(nome.trim()); // Utilize a função buscarBebida(nome) para obter o objeto bebida correspondente
+                     
+                    if (bebidaEncontrada != null) {
+                        //System.out.println("bebida encontrada:" + bebidaEncontrada.getNome());
+                        bebidaEncontrada.setQuantidade(quantidade);
+                        listaDeBebidas.add(bebidaEncontrada);
+                    }
+                }
+
+                pedido = new Pedido(pedidoId, notaFiscalId, listaDeBebidas, valorTotal);
+                listaDePedidos.add(pedido);
+            }            
         }
         rs.close();
         ps.close();
@@ -81,7 +112,7 @@ public class PedidoDAO {
 
         try {
             // Inserir a nota fiscal
-            String sqlNotaFiscal = "INSERT INTO nota_fiscal (id_usuario, id_endereco, total) VALUES (?, ?, ?)";
+            String sqlNotaFiscal = "INSERT INTO nota_fiscal (id_cliente, id_endereco, total) VALUES (?, ?, ?)";
             psNotaFiscal = connection.prepareStatement(sqlNotaFiscal, Statement.RETURN_GENERATED_KEYS);
             psNotaFiscal.setInt(1, notaFiscal.getIdCliente());
             psNotaFiscal.setInt(2, notaFiscal.getIdEndereco());
@@ -94,14 +125,25 @@ public class PedidoDAO {
                 int notaFiscalId = rs.getInt(1);
 
                 // Inserir os detalhes do pedido
-                String sqlPedido = "INSERT INTO pedido (nota_fiscal_id, tamanho, sabores, bebidas, borda, valor_total) VALUES (?, ?, ?, ?, ?, ?)";
+                String sqlPedido = "INSERT INTO pedido (nota_fiscal_id, tamanho, pizzas, bebidas, borda, valor_total) VALUES (?, ?, ?, ?, ?, ?)";
                 psPedido = connection.prepareStatement(sqlPedido);
                 for (Pedido pedido : listaDePedidos) {
                     psPedido.setInt(1, notaFiscalId);
-                    psPedido.setString(2, pedido.getTamanho());
-                    psPedido.setString(3, pedido.concatenaPizzas()); // Concatena os IDs dos sabores
-                    psPedido.setString(4, pedido.getBebidas());
-                    psPedido.setString(5, pedido.getBorda());
+                    if(pedido.getSabores()!=null){
+                        psPedido.setString(2, pedido.getTamanho());
+                        psPedido.setString(3, pedido.concatenaPizzas());
+                        psPedido.setString(5, pedido.getBorda());
+                    }else {
+                         psPedido.setString(2, null);
+                        psPedido.setString(3, null);
+                        psPedido.setString(5, null); // Campo de bebidas é nulo para pedido de pizza
+                    }// Concatena os IDs dos sabores
+
+                    if (pedido.getBebidas() != null) {
+                        psPedido.setString(4, pedido.concatenarBebidas());
+                    } else {
+                        psPedido.setString(4, null); // Campo de bebidas é nulo para pedido de pizza
+                    }
                     psPedido.setBigDecimal(6, pedido.getValorTotal());
                     psPedido.executeUpdate();
                 }
@@ -122,6 +164,7 @@ public class PedidoDAO {
             }
         }
     }
+
     public List<NotaFiscal> buscaTodosPedidosComNome(String nomeCliente, String nomePizza, Date dataInicio, Date dataFim) throws SQLException {
         Connection connection = new Conexao().getConexao();
         StringBuilder sqlBuilder = new StringBuilder("SELECT p.*, nf.id_cliente, nf.id_endereco, nf.data_venda, nf.total, nf.id, u.nome AS nome_cliente ")

@@ -20,10 +20,9 @@ public class NotaFiscal {
 
     private BigDecimal total;
 
-    public NotaFiscal(int id_cliente, int id_endereco, BigDecimal total) {
+    public NotaFiscal(int id_cliente, int id_endereco) {
         this.id_cliente = id_cliente;
         this.id_endereco = id_endereco;
-        this.total = total;
     }
     public NotaFiscal(int id, int id_cliente, int id_endereco, List<Pedido> listaPedidos, BigDecimal total) {
         this.id_cliente = id_cliente;
@@ -31,7 +30,11 @@ public class NotaFiscal {
         this.id_endereco = id_endereco;
         this.total = total;
     }
-    
+    public NotaFiscal(int id_cliente, int id_endereco, BigDecimal total) {
+        this.id_cliente = id_cliente;
+        this.id_endereco = id_endereco;
+        this.total = total;
+    }
     public List<Pedido> getListaPedidos() {
         return listaPedidos;
     }
