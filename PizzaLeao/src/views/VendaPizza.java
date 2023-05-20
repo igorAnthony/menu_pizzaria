@@ -11,8 +11,6 @@ import java.awt.Component;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
@@ -67,6 +65,8 @@ public class VendaPizza extends javax.swing.JFrame {
         atualizarTabelaCliente("","");
         atualizarTabelaEndereco("","","");
         atualizarTabelaBebida("");
+        atualizarTabelaCarrinhoPizza();
+        atualizarTabelaCarrinhoBebida();
     }
     
     public VendaPizza(Cliente cliente, List<PizzaMontada> listaDePizzasMontadas, List<Bebida> listaDeBebidasSelecionadas, Endereco enderecoSelecionado) {
@@ -76,6 +76,13 @@ public class VendaPizza extends javax.swing.JFrame {
         this.enderecoSelecionado = enderecoSelecionado;
         initComponents();
         getContentPane().setBackground(Color.DARK_GRAY);
+        if(enderecoSelecionado != null){
+            mostraEnderecoSelecionado.setText(enderecoSelecionado.getRua());
+        }
+        if(clienteSelecionado != null){
+            mostraClienteSelecionado.setText(clienteSelecionado.getNome());
+        }
+        totalPedido.setText(calcularValorTotal().toString());
         atualizarTabelaCliente("","");
         atualizarTabelaEndereco("","","");
         atualizarTabelaBebida("");
@@ -142,8 +149,6 @@ public class VendaPizza extends javax.swing.JFrame {
         jLabel42 = new javax.swing.JLabel();
         filtroTelefoneCliente = new javax.swing.JTextField();
         filtrarCliente = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
         selecionarCliente = new javax.swing.JButton();
         editarCliente = new javax.swing.JButton();
         excluirCliente = new javax.swing.JButton();
@@ -204,6 +209,10 @@ public class VendaPizza extends javax.swing.JFrame {
         atualizarBebida = new javax.swing.JButton();
         removerBebida = new javax.swing.JButton();
         totalPedido = new javax.swing.JTextField();
+        mostraClienteSelecionado = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        mostraEnderecoSelecionado = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 102, 0));
@@ -509,6 +518,7 @@ public class VendaPizza extends javax.swing.JFrame {
         });
 
         tabelaCliente.setBackground(new java.awt.Color(90, 90, 90));
+        tabelaCliente.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         tabelaCliente.setForeground(new java.awt.Color(255, 119, 26));
         tabelaCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -556,9 +566,6 @@ public class VendaPizza extends javax.swing.JFrame {
             }
         });
 
-        jLabel10.setForeground(new java.awt.Color(255, 119, 26));
-        jLabel10.setText("Cliente selecionado");
-
         selecionarCliente.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
         selecionarCliente.setForeground(new java.awt.Color(255, 119, 26));
         selecionarCliente.setText("Selecionar");
@@ -570,7 +577,8 @@ public class VendaPizza extends javax.swing.JFrame {
 
         editarCliente.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
         editarCliente.setForeground(new java.awt.Color(255, 119, 26));
-        editarCliente.setText("Editar");
+        editarCliente.setText("Atualizar");
+        editarCliente.setToolTipText("Selecione um cliente para editar");
         editarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editarClienteActionPerformed(evt);
@@ -580,6 +588,7 @@ public class VendaPizza extends javax.swing.JFrame {
         excluirCliente.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
         excluirCliente.setForeground(new java.awt.Color(255, 119, 26));
         excluirCliente.setText("Excluir");
+        excluirCliente.setToolTipText("Selecione um cliente para excluir");
         excluirCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 excluirClienteActionPerformed(evt);
@@ -601,16 +610,13 @@ public class VendaPizza extends javax.swing.JFrame {
                         .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelClienteLayout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(16, 16, 16)
+                                .addGap(293, 293, 293)
                                 .addComponent(selecionarCliente)
-                                .addGap(42, 42, 42)
+                                .addGap(28, 28, 28)
                                 .addComponent(editarCliente)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(excluirCliente)))
-                        .addGap(32, 32, 32))
+                        .addGap(47, 47, 47))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelClienteLayout.createSequentialGroup()
                         .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panelClienteLayout.createSequentialGroup()
@@ -635,8 +641,7 @@ public class VendaPizza extends javax.swing.JFrame {
                                         .addComponent(cadastroNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(panelClienteLayout.createSequentialGroup()
                                         .addGap(76, 76, 76)
-                                        .addComponent(jLabel36)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                        .addComponent(jLabel36)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel41)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -682,13 +687,10 @@ public class VendaPizza extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(excluirCliente)
-                            .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel10)
-                                .addComponent(selecionarCliente)
-                                .addComponent(editarCliente))))
+                        .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(selecionarCliente)
+                            .addComponent(editarCliente)
+                            .addComponent(excluirCliente)))
                     .addGroup(panelClienteLayout.createSequentialGroup()
                         .addGap(89, 89, 89)
                         .addComponent(jLabel36)
@@ -711,7 +713,7 @@ public class VendaPizza extends javax.swing.JFrame {
                 .addGap(48, 48, 48))
             .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelClienteLayout.createSequentialGroup()
-                    .addContainerGap(411, Short.MAX_VALUE)
+                    .addContainerGap(410, Short.MAX_VALUE)
                     .addComponent(jLabel39)
                     .addGap(89, 89, 89)))
         );
@@ -778,7 +780,7 @@ public class VendaPizza extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jNumero)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(50, 50, 50)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -844,6 +846,7 @@ public class VendaPizza extends javax.swing.JFrame {
         });
 
         tabelaEndereco.setBackground(new java.awt.Color(90, 90, 90));
+        tabelaEndereco.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         tabelaEndereco.setForeground(new java.awt.Color(255, 119, 26));
         tabelaEndereco.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1037,6 +1040,7 @@ public class VendaPizza extends javax.swing.JFrame {
         jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/leao.png"))); // NOI18N
 
         tabelaBebida.setBackground(new java.awt.Color(90, 90, 90));
+        tabelaBebida.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         tabelaBebida.setForeground(new java.awt.Color(255, 119, 26));
         tabelaBebida.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1054,6 +1058,7 @@ public class VendaPizza extends javax.swing.JFrame {
         adicionarBebida.setFont(new java.awt.Font("Cascadia Code", 1, 18)); // NOI18N
         adicionarBebida.setForeground(new java.awt.Color(255, 102, 0));
         adicionarBebida.setText("Adicionar");
+        adicionarBebida.setToolTipText("Para adicionar a bebida, selecione a bebida desejada clicando na tabela.");
         adicionarBebida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 adicionarBebidaActionPerformed(evt);
@@ -1074,6 +1079,7 @@ public class VendaPizza extends javax.swing.JFrame {
         filtrarBebida.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         filtrarBebida.setForeground(new java.awt.Color(255, 119, 26));
         filtrarBebida.setText("Filtrar");
+        filtrarBebida.setToolTipText("Para filtrar, preencha os campos e aperte esse botão.");
         filtrarBebida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filtrarBebidaActionPerformed(evt);
@@ -1091,20 +1097,10 @@ public class VendaPizza extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBebidasLayout.createSequentialGroup()
                 .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBebidasLayout.createSequentialGroup()
-                        .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelBebidasLayout.createSequentialGroup()
-                                .addGap(56, 56, 56)
-                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(101, 101, 101)
-                                .addComponent(Bebida, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelBebidasLayout.createSequentialGroup()
-                                .addGap(474, 474, 474)
-                                .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(adicionarBebida)
-                                    .addGroup(panelBebidasLayout.createSequentialGroup()
-                                        .addComponent(jLabel19)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(quantidadeBebida, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(56, 56, 56)
+                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(101, 101, 101)
+                        .addComponent(Bebida, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBebidasLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -1116,7 +1112,16 @@ public class VendaPizza extends javax.swing.JFrame {
                                 .addComponent(filtroNomeBebida, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addComponent(filtrarBebida)
-                        .addGap(90, 90, 90)))
+                        .addGap(90, 90, 90))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBebidasLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(adicionarBebida)
+                            .addGroup(panelBebidasLayout.createSequentialGroup()
+                                .addComponent(jLabel19)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(quantidadeBebida, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(210, 210, 210)))
                 .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBebidasLayout.createSequentialGroup()
                         .addComponent(jLabel17)
@@ -1153,14 +1158,14 @@ public class VendaPizza extends javax.swing.JFrame {
                             .addGroup(panelBebidasLayout.createSequentialGroup()
                                 .addComponent(jLabel21)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Bebida, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(Bebida, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelBebidasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(quantidadeBebida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel19))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(adicionarBebida)
-                        .addGap(21, 21, 21)))
+                        .addGap(50, 50, 50)))
                 .addGap(127, 127, 127))
         );
 
@@ -1177,6 +1182,11 @@ public class VendaPizza extends javax.swing.JFrame {
                 "Tamanho", "Sabores", "Borda", "Valor"
             }
         ));
+        tabelaCarrinhoPizza.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tabelaCarrinhoPizzaMouseEntered(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabelaCarrinhoPizza);
 
         jLabel37.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
@@ -1195,6 +1205,7 @@ public class VendaPizza extends javax.swing.JFrame {
         editarPizza.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
         editarPizza.setForeground(new java.awt.Color(255, 102, 0));
         editarPizza.setText("Editar");
+        editarPizza.setToolTipText("Para editar a pizza, selecione a pizza clicando na tabela e aperte esse botão.");
         editarPizza.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editarPizzaActionPerformed(evt);
@@ -1221,6 +1232,7 @@ public class VendaPizza extends javax.swing.JFrame {
         removerSabor.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
         removerSabor.setForeground(new java.awt.Color(255, 102, 0));
         removerSabor.setText("Remover");
+        removerSabor.setToolTipText("Para remover a pizza, selecione a pizza clicando na tabela e aperte esse botão.");
         removerSabor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removerSaborActionPerformed(evt);
@@ -1230,6 +1242,7 @@ public class VendaPizza extends javax.swing.JFrame {
         atualizarBebida.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
         atualizarBebida.setForeground(new java.awt.Color(255, 102, 0));
         atualizarBebida.setText("Editar");
+        atualizarBebida.setToolTipText("Para editar a bebida, selecione a bebida clicando na tabela e aperte esse botão.");
         atualizarBebida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 atualizarBebidaActionPerformed(evt);
@@ -1239,6 +1252,7 @@ public class VendaPizza extends javax.swing.JFrame {
         removerBebida.setFont(new java.awt.Font("Cascadia Code", 1, 12)); // NOI18N
         removerBebida.setForeground(new java.awt.Color(255, 102, 0));
         removerBebida.setText("Remover");
+        removerBebida.setToolTipText("Para remover a bebida, selecione a pizza clicando na tabela e aperte esse botão.");
         removerBebida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removerBebidaActionPerformed(evt);
@@ -1247,6 +1261,18 @@ public class VendaPizza extends javax.swing.JFrame {
 
         totalPedido.setFont(new java.awt.Font("Cascadia Code", 1, 14)); // NOI18N
         totalPedido.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        mostraClienteSelecionado.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        mostraClienteSelecionado.setForeground(new java.awt.Color(255, 119, 26));
+
+        jLabel10.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel10.setText("Nome do cliente selecionado");
+
+        mostraEnderecoSelecionado.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        mostraEnderecoSelecionado.setForeground(new java.awt.Color(255, 119, 26));
+
+        jLabel22.setForeground(new java.awt.Color(255, 119, 26));
+        jLabel22.setText("Endereço selecionado");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1283,7 +1309,7 @@ public class VendaPizza extends javax.swing.JFrame {
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(cancelar)
-                                .addGap(18, 18, 18)
+                                .addGap(37, 37, 37)
                                 .addComponent(concluirPedido))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(removerSabor)
@@ -1300,7 +1326,15 @@ public class VendaPizza extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(totalPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(totalPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(mostraClienteSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel22)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(mostraEnderecoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(34, 34, 34)))
                 .addComponent(jLabel5))
         );
@@ -1348,15 +1382,23 @@ public class VendaPizza extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(editarPizza)
                             .addComponent(removerSabor))))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(totalPedido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(mostraClienteSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(mostraEnderecoSelecionado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel22))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(concluirPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cancelar))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("Sabores");
@@ -1586,14 +1628,10 @@ public class VendaPizza extends javax.swing.JFrame {
             TableModel model = tabelaCliente.getModel();
             cliente.setNome((String) model.getValueAt(linha, 0));
             cliente.setTelefone((String) model.getValueAt(linha, 1));
-            String formatoEntrada = "dd/MM/yyyy";
-            SimpleDateFormat sdfEntrada = new SimpleDateFormat(formatoEntrada);
-            Date data = (Date) sdfEntrada.parse((String) model.getValueAt(linha,2));
-            cliente.setDataDeNascimento(data);
             clienteDAO.editarCliente(cliente);
             atualizarTabelaCliente("", "");
-            JOptionPane.showMessageDialog(null, "Fornecedor atualizado com sucesso!");
-        } catch (SQLException | ParseException ex) {
+            JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso!");
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_editarClienteActionPerformed
@@ -1618,6 +1656,7 @@ public class VendaPizza extends javax.swing.JFrame {
         }
         this.clienteSelecionado = listaClientes.get(linha);
         if(this.clienteSelecionado != null){
+            mostraClienteSelecionado.setText(this.clienteSelecionado.getNome());
             JOptionPane.showMessageDialog(null, "Cliente selecionado!");
         }
         atualizarTabelaEndereco("","","");
@@ -1626,7 +1665,7 @@ public class VendaPizza extends javax.swing.JFrame {
     private void atualizarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarEnderecoActionPerformed
         int linha = tabelaEndereco.getSelectedRow();
         if (linha < 0) {
-            JOptionPane.showMessageDialog(null, "Selecione um cliente para editar", "Atenção", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Selecione um endereço para editar", "Atenção", JOptionPane.WARNING_MESSAGE);
             return;
         }
         Endereco enderecoEscolhido = listaDeEnderecos.get(linha);
@@ -1638,7 +1677,7 @@ public class VendaPizza extends javax.swing.JFrame {
             enderecoEscolhido.setNumero(Integer.parseInt((String) model.getValueAt(linha, 3)));
             clienteDAO.atualizarEndereco(enderecoEscolhido);
             atualizarTabelaCliente("", "");
-            JOptionPane.showMessageDialog(null, "Fornecedor atualizado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Endereço atualizado com sucesso!");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -1681,7 +1720,7 @@ public class VendaPizza extends javax.swing.JFrame {
     private void adicionarBebidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarBebidaActionPerformed
         int linha =tabelaBebida.getSelectedRow();
         if(linha<0){
-            JOptionPane.showMessageDialog(null, "Selecione uma bebida para adicionar");
+            JOptionPane.showMessageDialog(null, "Selecione uma bebida para adicionar.");
             return;
         }
         if(listaDeBebidasSelecionadas == null){
@@ -1694,11 +1733,13 @@ public class VendaPizza extends javax.swing.JFrame {
                 listaDeBebidasSelecionadas.add(bebidaSelecionada);
                 atualizarTabelaBebida("");
                 atualizarTabelaCarrinhoBebida();
+                totalPedido.setText(calcularValorTotal().toString());
+                JOptionPane.showMessageDialog(null, "Bebida adicionada com sucesso!");
             }else{
-                JOptionPane.showMessageDialog(null, "Selecione uma quantidade valida");
+                JOptionPane.showMessageDialog(null, "Selecione uma quantidade válida.");
             }
         }else{
-            JOptionPane.showMessageDialog(null, "Necessário inserir a quantidade de bebida que deseja adicionar");
+            JOptionPane.showMessageDialog(null, "Necessário inserir a quantidade de bebida que deseja adicionar.");
 
         }         
     }//GEN-LAST:event_adicionarBebidaActionPerformed
@@ -1715,9 +1756,14 @@ public class VendaPizza extends javax.swing.JFrame {
         }
         enderecoSelecionado = listaDeEnderecos.get(linha);
         if(enderecoSelecionado != null){
+            mostraEnderecoSelecionado.setText(enderecoSelecionado.getRua());
             JOptionPane.showMessageDialog(null, "Endereço selecionado!");
         }
     }//GEN-LAST:event_selecionarEnderecoActionPerformed
+
+    private void tabelaCarrinhoPizzaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaCarrinhoPizzaMouseEntered
+        
+    }//GEN-LAST:event_tabelaCarrinhoPizzaMouseEntered
     private void atualizarTabelaCliente(String nomeCliente, String telefoneCliente) {
         try {
             listaClientes = clienteDAO.buscaListaClientes(nomeCliente, telefoneCliente);
@@ -1731,7 +1777,9 @@ public class VendaPizza extends javax.swing.JFrame {
                 model.addRow(new Object[]{nome, telefone});            
             }
             corColunasTabela(tabelaCliente, 0);
-            corColunasTabelaCenter(tabelaCliente, 1);
+            corColunasTabelaCenter(tabelaCliente, 1, true);
+            centralizarTituloColuna(tabelaCliente, 0);
+            centralizarTituloColuna(tabelaCliente, 1);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -1754,10 +1802,13 @@ public class VendaPizza extends javax.swing.JFrame {
                 }
             }
             corColunasTabela(tabelaEndereco, 0);
-            corColunasTabelaCenter(tabelaEndereco, 1);
-            corColunasTabelaCenter(tabelaEndereco, 2);
-            corColunasTabelaCenter(tabelaEndereco, 3);
-
+            corColunasTabelaCenter(tabelaEndereco, 1, true);
+            corColunasTabelaCenter(tabelaEndereco, 2, true);
+            corColunasTabelaCenter(tabelaEndereco, 3, true);
+            centralizarTituloColuna(tabelaEndereco, 0);
+            centralizarTituloColuna(tabelaEndereco, 1);
+            centralizarTituloColuna(tabelaEndereco, 2);
+            centralizarTituloColuna(tabelaEndereco, 3);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -1778,7 +1829,9 @@ public class VendaPizza extends javax.swing.JFrame {
             }
             
             corColunasTabela(tabelaBebida, 0);
-            corColunasTabelaCenter(tabelaBebida, 1);
+            corColunasTabelaCenter(tabelaBebida, 1, true);
+            centralizarTituloColuna(tabelaBebida, 0);
+            centralizarTituloColuna(tabelaBebida, 1);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -1792,7 +1845,15 @@ public class VendaPizza extends javax.swing.JFrame {
                 PizzaMontada pizza = listaDePizzasMontadas.get(i);
                 model.addRow(new Object[]{pizza.getTamanho(), pizza.concatenaPizzas(), pizza.getBorda(), pizza.getValorTotal()});
             }
-        }        
+        }
+        corColunasTabelaCenter(tabelaCarrinhoPizza, 0, false);
+        corColunasTabelaCenter(tabelaCarrinhoPizza, 2, false);
+        corColunasTabelaCenter(tabelaCarrinhoPizza, 3, false);
+        centralizarTituloColuna(tabelaCarrinhoPizza, 0);
+        centralizarTituloColuna(tabelaCarrinhoPizza, 1);        
+        centralizarTituloColuna(tabelaCarrinhoPizza, 2);        
+        centralizarTituloColuna(tabelaCarrinhoPizza, 3);        
+        
     }
     private void atualizarTabelaCarrinhoBebida() {
         DefaultTableModel model = (DefaultTableModel) tabelaCarrinhoBebida.getModel();
@@ -1802,25 +1863,56 @@ public class VendaPizza extends javax.swing.JFrame {
                 model.addRow(new Object[]{bebida.getNome(), bebida.getQuantidade(), bebida.getPreco().multiply(new BigDecimal(bebida.getQuantidade()))});
             } 
         }
+        corColunasTabelaCenter(tabelaCarrinhoBebida, 1, false);
+        corColunasTabelaCenter(tabelaCarrinhoBebida, 2,false);
+        centralizarTituloColuna(tabelaCarrinhoBebida, 0);
+        centralizarTituloColuna(tabelaCarrinhoBebida, 1);        
+        centralizarTituloColuna(tabelaCarrinhoBebida, 2);
               
     }
     private BigDecimal calcularValorTotal(){
-        double total = 0;
-       
-        return new BigDecimal(total);
+        BigDecimal total = BigDecimal.ZERO;
+        if(listaDePizzasMontadas != null){
+            for(PizzaMontada pedido:listaDePizzasMontadas){
+                total = total.add(pedido.getValorTotal());
+            }
+        }
+        if(listaDeBebidasSelecionadas!= null){
+            for(Bebida pedido:listaDeBebidasSelecionadas){
+                total = total.add(pedido.getPreco().multiply(new BigDecimal(pedido.getQuantidade())));
+            }
+        }
+        return total;
     }
-    private void corColunasTabelaCenter(JTable table, int i) {
-        VendaPizza.LinhaRendererCenter linhaRenderer = new VendaPizza.LinhaRendererCenter();
+    private void corColunasTabelaCenter(JTable table, int i, boolean querCor) {
+        VendaPizza.LinhaRendererCenter linhaRenderer = new VendaPizza.LinhaRendererCenter(querCor);
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(i).setCellRenderer(linhaRenderer);
-    }
-    
+    } 
     private void corColunasTabela(JTable table, int i) {
         LinhaRenderer linhaRenderer = new LinhaRenderer();
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(i).setCellRenderer(linhaRenderer);
     }
+    public static void centralizarTituloColuna(JTable tabela, int coluna) {
+        TableColumnModel colunaModelo = tabela.getColumnModel();
+        DefaultTableCellRenderer renderizador = (DefaultTableCellRenderer) colunaModelo.getColumn(coluna).getHeaderRenderer();
+        
+        if (renderizador == null) {
+            renderizador = (DefaultTableCellRenderer) tabela.getTableHeader().getDefaultRenderer();
+        }
+        
+        renderizador.setHorizontalAlignment(SwingConstants.CENTER);
+        colunaModelo.getColumn(coluna).setHeaderRenderer(renderizador);
+    }
 
+    public static void main(String[] args) {
+        // Exemplo de uso:
+        JTable tabela = new JTable(10, 5); // Cria uma tabela 10x5
+        
+        // Centralizar o título da coluna 2
+        centralizarTituloColuna(tabela, 2);
+    }
     public class LinhaRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -1844,28 +1936,37 @@ public class VendaPizza extends javax.swing.JFrame {
         }
     }
     public class LinhaRendererCenter extends DefaultTableCellRenderer {
+        private boolean querCor;
+        public LinhaRendererCenter(boolean querCor) {
+            this.querCor = querCor;
+        }
+        
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             setHorizontalAlignment(SwingConstants.CENTER);
             // Defina a cor de fundo e a cor do texto da linha desejada
-            if (isSelected) {
+            if(this.querCor){
+                if (isSelected) {
                 component.setBackground(table.getSelectionBackground());
                 component.setForeground(table.getSelectionForeground());
-            } else {
-                if (row % 2 == 0) { // Por exemplo, linhas pares terão cor de fundo diferente
-                    component.setBackground(Color.DARK_GRAY);
-                    component.setForeground(table.getForeground());
                 } else {
-                    component.setBackground(Color.GRAY);
-                    component.setForeground(Color.WHITE);
-                     // Cor do texto padrão
+                    if (row % 2 == 0) { // Por exemplo, linhas pares terão cor de fundo diferente
+                        component.setBackground(Color.DARK_GRAY);
+                        component.setForeground(table.getForeground());
+                    } else {
+                        component.setBackground(Color.GRAY);
+                        component.setForeground(Color.WHITE);
+                         // Cor do texto padrão
+                    }
                 }
             }
+            
 
             return component;
         }
     }
+    
    //------------------------------FUNCOES----------------------------------------------
 //    private void updateCheckboxState() {
 //        int selectedCount = 0;
@@ -1961,6 +2062,7 @@ public class VendaPizza extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
@@ -2007,7 +2109,8 @@ public class VendaPizza extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable3;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField mostraClienteSelecionado;
+    private javax.swing.JTextField mostraEnderecoSelecionado;
     private javax.swing.JPanel panelBebidas;
     private javax.swing.JPanel panelCliente;
     private javax.swing.JPanel panelEnderecos;

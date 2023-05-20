@@ -48,7 +48,7 @@ public class ClienteDAO {
         Connection connection = new Conexao().getConexao();
 
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE cliente SET nome = ?, telefone = ?, dataDeNascimento = ? WHERE id = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE cliente SET nome = ?, telefone = ?, data_nascimento = ? WHERE id = ?");
 
             preparedStatement.setString(1, cliente.getNome());
             preparedStatement.setString(2, cliente.getTelefone());

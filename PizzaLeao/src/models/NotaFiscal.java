@@ -17,7 +17,7 @@ public class NotaFiscal {
     private int id_cliente;
     private int id_endereco;
     private List<Pedido> listaPedidos;
-
+    private LocalDate data_venda;
     private BigDecimal total;
 
     public NotaFiscal(int id_cliente, int id_endereco) {
@@ -26,6 +26,7 @@ public class NotaFiscal {
     }
     public NotaFiscal(int id, int id_cliente, int id_endereco, List<Pedido> listaPedidos, BigDecimal total) {
         this.id_cliente = id_cliente;
+        //this.data_venda = data_venda;
         this.listaPedidos = listaPedidos;
         this.id_endereco = id_endereco;
         this.total = total;
@@ -35,6 +36,8 @@ public class NotaFiscal {
         this.id_endereco = id_endereco;
         this.total = total;
     }
+    
+    
     public List<Pedido> getListaPedidos() {
         return listaPedidos;
     }
@@ -42,7 +45,7 @@ public class NotaFiscal {
     public void setListaPedidos(List<Pedido> listaPedidos) {
         this.listaPedidos = listaPedidos;
     }
-    private LocalDate data_venda;
+    
 
     public LocalDate getData_venda() {
         return data_venda;

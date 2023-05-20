@@ -14,7 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import jdbc.Conexao;
-import dao.BebidaDAO;
+import java.time.LocalDate;
 import models.Bebida;
 import models.NotaFiscal;
 import models.Pedido;
@@ -41,7 +41,7 @@ public class PedidoDAO {
         return listaDeNotasFiscais;
     }
     
-    public List<Pedido> buscarDetalhesPedido(int notaFiscalId) throws SQLException {
+    public List<Pedido> retornaDetalhesDaNotaPeloId(int notaFiscalId) throws SQLException {
         Connection connection = new Conexao().getConexao();
         String sql = "SELECT * FROM pedido WHERE nota_fiscal_id = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
@@ -59,7 +59,7 @@ public class PedidoDAO {
 
             pedido = null;
 
-            if (pizzas != null && !pizzas.isEmpty()) {
+            if (pizzas != null) {
                 
                 List<Pizza> listaDePizzas = new ArrayList<>();
 
@@ -74,7 +74,7 @@ public class PedidoDAO {
 
                 pedido = new Pedido(pedidoId, notaFiscalId, tamanho, listaDePizzas, borda, valorTotal);
                 listaDePedidos.add(pedido);
-            } else if (bebidasEmString != null && !bebidasEmString.isEmpty()) {
+            } else if (bebidasEmString != null) {
                 List<Bebida> listaDeBebidas = new ArrayList<>();
                 
                 String[] bebidas = bebidasEmString.split(";");
@@ -96,6 +96,7 @@ public class PedidoDAO {
                 }
 
                 pedido = new Pedido(pedidoId, notaFiscalId, listaDeBebidas, valorTotal);
+                System.out.println("valor do idnota:" + notaFiscalId);
                 listaDePedidos.add(pedido);
             }            
         }
@@ -206,11 +207,12 @@ public class PedidoDAO {
         List<NotaFiscal> listaDeNotas = new ArrayList<>();
 
         while (resultSet.next()) {
-            List<Pedido> listaDePedidos = buscarDetalhesPedido(resultSet.getInt("nota_fiscal_id"));
+            List<Pedido> listaDePedidos = retornaDetalhesDaNotaPeloId(resultSet.getInt("nota_fiscal_id"));
             int idCliente = resultSet.getInt("id_cliente");
             int idEndereco = resultSet.getInt("id_endereco");
             BigDecimal total = resultSet.getBigDecimal("total");
-            int id = resultSet.getInt("id");
+            int id = resultSet.getInt("nota_fiscal_id");
+            //LocalDate dataVenda = resultSet.getDate("data_venda").toLocalDate();
             NotaFiscal nf = new NotaFiscal(id, idEndereco, idCliente, listaDePedidos, total);
             listaDeNotas.add(nf);
         }
@@ -221,4 +223,32 @@ public class PedidoDAO {
 
         return listaDeNotas;
     }
+    public List<NotaFiscal> getAllNotasFiscais() throws SQLException {
+        Connection connection = new Conexao().getConexao();
+        String sql = "SELECT * FROM nota_fiscal";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        List<NotaFiscal> listaDeNotas = new ArrayList<>();
+
+        while (rs.next()) {
+            int notaFiscalId = rs.getInt("id");
+            int idCliente = rs.getInt("id_cliente");
+            int idEndereco = rs.getInt("id_endereco");
+            BigDecimal total = rs.getBigDecimal("total");
+            //java.sql.Date dataVenda = rs.getDate("data_venda");
+
+            List<Pedido> listaDePedidos = retornaDetalhesDaNotaPeloId(notaFiscalId); // Passa o ID da nota fiscal corretamente
+            System.out.println("valor do idnota:" + notaFiscalId);
+            NotaFiscal nf = new NotaFiscal(notaFiscalId, idEndereco, idCliente, listaDePedidos, total);
+            listaDeNotas.add(nf);
+        }
+
+        rs.close();
+        ps.close();
+        connection.close();
+
+        return listaDeNotas;
+    }
+
+
 }

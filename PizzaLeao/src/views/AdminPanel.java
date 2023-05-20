@@ -1943,36 +1943,36 @@ public class AdminPanel extends javax.swing.JFrame {
     }
     private void atualizarTabelaVenda(String nomeCliente, String nomePizza, java.sql.Date dataDeVendaInicio, java.sql.Date dataDeVendaFim) {
         try {
-            listaNotasFiscais = pedidoDAO.buscaTodosPedidosComNome(nomeCliente, nomePizza, dataDeVendaInicio, dataDeVendaFim);
+            listaNotasFiscais = pedidoDAO.getAllNotasFiscais();
             DefaultTableModel model = (DefaultTableModel) tabelaVenda.getModel();
             model.setNumRows(0);
-            for (int i = 0; i < listaNotasFiscais.size(); i++) {
-                NotaFiscal notafiscal = listaNotasFiscais.get(i);
-                int notaFiscalId = notafiscal.getId();
-                int idCliente = notafiscal.getIdCliente();
+            for (NotaFiscal nf : listaNotasFiscais) {
+                int idCliente = nf.getIdCliente();
                 Cliente cliente = clienteDAO.buscaClientePorId(idCliente);
                 if (cliente != null) {
                     String nome = cliente.getNome();
-                    
-                    for(Pedido pedido : notafiscal.getListaPedidos()){
+
+                    for (Pedido pedido : nf.getListaPedidos()) {
                         String tamanho = "";
                         String sabores = "";
                         String borda = "";
                         String bebidas = "";
-                        if(pedido.getSabores() != null){
+
+                        if (pedido.getSabores() != null) {
                             tamanho = pedido.getTamanho();
                             sabores = pedido.concatenaPizzas();
                             borda = pedido.getBorda();
                         }
-                        if(pedido.getBebidas() != null){
+
+                        if (pedido.getBebidas() != null) {
                             bebidas = pedido.concatenarBebidas();
                         }
                         BigDecimal valorTotal = pedido.getValorTotal();
-                        model.addRow(new Object[]{notaFiscalId, nome, sabores, tamanho, bebidas, borda, "", valorTotal});
+                        model.addRow(new Object[]{pedido.getNotaFiscalId(), nome, sabores, tamanho, bebidas, borda, "", pedido.getValorTotal()});
                     }
                 }
-                                  
             }
+
             corColunasTabelaCenter(tabelaVenda,0);
             corColunasTabela(tabelaVenda,1);
             corColunasTabela(tabelaVenda,2);
