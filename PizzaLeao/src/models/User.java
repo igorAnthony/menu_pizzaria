@@ -9,12 +9,19 @@ package models;
  * @author hawks
  */
 public class User {
+
+    
     private int id;
     private String nome;
     private String email;
     private String senha;
-    private String nivel;
-
+    public User(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+    public User(){};
+            
     public int getId() {
         return id;
     }
@@ -45,14 +52,6 @@ public class User {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public String getNivel() {
-        return nivel;
-    }
-
-    public void setNivel(String nivel) {
-        this.nivel = nivel;
     }
 
 }

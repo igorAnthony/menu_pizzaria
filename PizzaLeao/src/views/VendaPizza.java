@@ -1413,18 +1413,22 @@ public class VendaPizza extends javax.swing.JFrame {
     private void concluirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_concluirPedidoActionPerformed
         if(clienteSelecionado != null){
             if(enderecoSelecionado != null){
-            List<Pedido> pedidos = new ArrayList<>();
-            pedidoDAO = new PedidoDAO();
-            NotaFiscal nf = new NotaFiscal(clienteSelecionado.getId(), enderecoSelecionado.getId());
-            for(PizzaMontada pizza: listaDePizzasMontadas){
-                Pedido pedido = new Pedido(pizza.getTamanho(),pizza.getSabores(),pizza.getBorda(),pizza.getValorTotal());
-                pedidos.add(pedido);
-            }
-            if(listaDeBebidasSelecionadas != null){
-                Pedido pedido = new Pedido(listaDeBebidasSelecionadas,calcularValorTotal());
-                pedidos.add(pedido);
-            } 
-            try {
+                List<Pedido> pedidos = new ArrayList<>();
+                pedidoDAO = new PedidoDAO();
+                NotaFiscal nf = new NotaFiscal(clienteSelecionado.getId(), enderecoSelecionado.getId());
+                BigDecimal total_nota = BigDecimal.ZERO; 
+                for(PizzaMontada pizza: listaDePizzasMontadas){
+                    Pedido pedido = new Pedido(pizza.getTamanho(),pizza.getSabores(),pizza.getBorda(),pizza.getValorTotal());
+                    pedidos.add(pedido);
+                    total_nota = total_nota.add(pizza.getValorTotal());
+                }
+                if(listaDeBebidasSelecionadas != null){
+                    Pedido pedido = new Pedido(listaDeBebidasSelecionadas,calcularValorTotal());
+                    total_nota = total_nota.add(pedido.getValorTotal());
+                    pedidos.add(pedido);
+                } 
+                try {
+                    nf.setTotal(total_nota);
                     pedidoDAO.inserirNotaFiscal(nf, pedidos);
                     JOptionPane.showMessageDialog(null, "Pedido realizado com sucesso!");
                 } catch (SQLException ex) {
@@ -1815,7 +1819,7 @@ public class VendaPizza extends javax.swing.JFrame {
     }
     private void atualizarTabelaBebida(String nomeBebida) {
         try {
-            listaDeBebidas = bebidaDAO.buscarBebida(nomeBebida);
+            listaDeBebidas = bebidaDAO.retornaListaBebidaPeloNome(nomeBebida);
             DefaultTableModel model = (DefaultTableModel) tabelaBebida.getModel();
             model.setNumRows(0);
             if(listaDeBebidas != null){

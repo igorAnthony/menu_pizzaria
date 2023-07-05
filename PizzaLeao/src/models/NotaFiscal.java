@@ -20,11 +20,16 @@ public class NotaFiscal {
     private LocalDate data_venda;
     private BigDecimal total;
 
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
     public NotaFiscal(int id_cliente, int id_endereco) {
         this.id_cliente = id_cliente;
         this.id_endereco = id_endereco;
     }
     public NotaFiscal(int id, int id_cliente, int id_endereco, List<Pedido> listaPedidos, BigDecimal total) {
+        this.id = id;
         this.id_cliente = id_cliente;
         //this.data_venda = data_venda;
         this.listaPedidos = listaPedidos;

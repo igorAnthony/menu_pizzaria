@@ -85,7 +85,7 @@ public class BebidaDAO {
             connection.close();
         }
     }
-    public List<Bebida> buscarBebida(String nome) throws SQLException {
+    public List<Bebida> retornaListaBebidaPeloNome(String nome) throws SQLException {
         Connection connection = new Conexao().getConexao();
         List<Bebida> listaBebidas = new ArrayList<>();
 
@@ -123,7 +123,7 @@ public class BebidaDAO {
 
         return listaBebidas;
     }
-    public Bebida buscarBebidaPorNomeExato(String nome) throws SQLException {
+    public Bebida retornaBebidaPeloNomeExato(String nome) throws SQLException {
         Connection connection = new Conexao().getConexao();
         Bebida bebida = null;
 
@@ -152,36 +152,4 @@ public class BebidaDAO {
 
         return bebida;
     }
-
-    public Bebida buscarBebidaPorId(int id) throws SQLException {
-        Connection connection = new Conexao().getConexao();
-        Bebida bebida = null;
-
-        try {
-            String sql = "SELECT id, nome, preco FROM bebida WHERE id = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, id);
-
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                int idBebida = rs.getInt("id");
-                String nomeBebida = rs.getString("nome");
-                BigDecimal precoBebida = rs.getBigDecimal("preco");
-
-                bebida = new Bebida(idBebida, nomeBebida, precoBebida);
-            }
-
-            rs.close();
-            ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            connection.close();
-        }
-
-        return bebida;
-    }
-
-
 }

@@ -284,7 +284,7 @@ public class ClienteDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("valorde:"+listaDeEnderecos.size());
+        //System.out.println("valorde:"+listaDeEnderecos.size());
         return listaDeEnderecos;
     }
 

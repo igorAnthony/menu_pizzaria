@@ -88,12 +88,12 @@ public class DespesaDAO {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             
             List<Object> parameterValues = new ArrayList<>();
-            System.out.println(dataPagtoInicio);
+            //System.out.println(dataPagtoInicio);
             if (dataPagtoInicio != null) {
                 queryBuilder.append(" AND data_pagto >= ?");
                 parameterValues.add(dataPagtoInicio);
             }
-            System.out.println(dataPagtoFim);
+            //System.out.println(dataPagtoFim);
             if (dataPagtoFim != null) {
                 queryBuilder.append(" AND data_pagto <= ?"); 
                 parameterValues.add(dataPagtoFim);

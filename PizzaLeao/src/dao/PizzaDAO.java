@@ -72,41 +72,21 @@ public class PizzaDAO {
             e.printStackTrace();
         }
     }
-
-    public List<Pizza> buscarListaDePizzasPorId(int pedidoId) throws SQLException {
-        Connection connection = new Conexao().getConexao();
-        String sql = "SELECT * FROM pizza WHERE id = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, pedidoId);
-        ResultSet rs = ps.executeQuery();
-        List<Pizza> listaDePizzasDoPedido = new ArrayList<>();
-        while (rs.next()) {
-            int pizzaId = rs.getInt("id");
-            String nomePizza = rs.getString("nome");
-            String ingredientesPizza = rs.getString("ingredientes");
-            String tipoPizza = rs.getString("tipo");
-            Pizza pizza = new Pizza(pizzaId, nomePizza, ingredientesPizza, tipoPizza);
-            listaDePizzasDoPedido.add(pizza);
-        }
-        rs.close();
-        ps.close();
-        return listaDePizzasDoPedido;
-    }
     
-    public List<Pizza> buscarListaDePizzas(String nomePizza, String tipoPizza) throws SQLException {
+    public List<Pizza> retornaListaDePizzas(String nomePizza, String tipoPizza) throws SQLException {
         Connection connection = new Conexao().getConexao();
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM pizza WHERE 1=1");
 
         List<Object> parameterValues = new ArrayList<>();
 
         if (nomePizza != null && !nomePizza.isEmpty()) {
-            sqlBuilder.append(" AND nome = ?");
-            parameterValues.add(nomePizza);
+            sqlBuilder.append(" AND nome LIKE ?");
+            parameterValues.add("%" +nomePizza +"%");
         }
 
         if (tipoPizza != null && !tipoPizza.isEmpty()) {
-            sqlBuilder.append(" AND tipo = ?");
-            parameterValues.add(tipoPizza);
+            sqlBuilder.append(" AND tipo LIKE ?");
+            parameterValues.add("%" +tipoPizza +"%");
         }
 
         PreparedStatement preparedStatement = connection.prepareStatement(sqlBuilder.toString());
@@ -134,7 +114,7 @@ public class PizzaDAO {
 
         return listaDePizzas;
     }
-    public Pizza buscarPizzaPorNomeExato(String nomePizza) throws SQLException {
+    public Pizza retornaPizzaPeloNome(String nomePizza) throws SQLException {
         Connection connection = new Conexao().getConexao();
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM pizza WHERE 1=1");
 
@@ -168,34 +148,5 @@ public class PizzaDAO {
         connection.close();
 
         return pizza;
-    }
-
-    
-    public List<Pizza> buscarListaDePizzas() throws SQLException {
-        Connection connection = new Conexao().getConexao();
-        List<Pizza> ListaDePizzas = new ArrayList<>();
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT id, nome, ingredientes, tipo FROM pizza");
-
-            while (resultSet.next()) {
-                int idPizza = resultSet.getInt("id");
-                String nomePizza = resultSet.getString("nome");
-                String ingredientesPizza = resultSet.getString("ingredientes");
-                String tipoPizza = resultSet.getString("tipo");
-
-                Pizza pizza = new Pizza(idPizza, nomePizza, ingredientesPizza, tipoPizza);
-                ListaDePizzas.add(pizza);
-            }
-
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return ListaDePizzas;
     }
 }

@@ -622,7 +622,7 @@ public class AdicionarPedido extends javax.swing.JFrame {
      */
     private void atualizarTabelaPizza() {
         try {
-            listaDeSabores = pizzaDAO.buscarListaDePizzas();
+            listaDeSabores = pizzaDAO.retornaListaDePizzas("", "");
             DefaultTableModel model = (DefaultTableModel) tabelaSaboresPizza.getModel();
             
             model.setNumRows(0);

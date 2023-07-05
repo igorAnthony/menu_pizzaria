@@ -40,7 +40,6 @@ import models.User;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author hawks
@@ -57,32 +56,33 @@ public class AdminPanel extends javax.swing.JFrame {
     private List<Despesa> listaDeDespesas = new ArrayList<>();
     private List<Bebida> listaDeBebidas = new ArrayList<>();
 
-    
     PedidoDAO pedidoDAO = new PedidoDAO();
     DespesaDAO despesaDAO = new DespesaDAO();
     ClienteDAO clienteDAO = new ClienteDAO();
     UsuarioDAO usuarioDAO = new UsuarioDAO();
     FornecedorDAO fornecedorDAO = new FornecedorDAO();
-    PizzaDAO pizzaDAO = new PizzaDAO();  
+    PizzaDAO pizzaDAO = new PizzaDAO();
     BebidaDAO bebidaDAO = new BebidaDAO();
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    
+
     List<String> tiposDePizza = new ArrayList<>();
     int indexUltimaLinhaSelecionada = -1;
     private User user;
+
     public AdminPanel(User user) {
         this.user = user;
         tiposDePizza.add("TRADICIONAL");
         tiposDePizza.add("ESPECIAL");
         tiposDePizza.add("DOCES");
         initComponents();
-        atualizarTabelaVenda("","",null,null);
-        atualizarTabelaClientes("","");
-        atualizarTabelaPizza("","");
-        atualizarTabelaFornecedor("","");
-        atualizarTabelaDespesas(null,null,null,null,"", "","");
+        atualizarTabelaVenda("", "", null, null);
+        atualizarTabelaClientes("", "");
+        atualizarTabelaPizza("", "");
+        atualizarTabelaFornecedor("", "");
+        atualizarTabelaDespesas(null, null, null, null, "", "", "");
         atualizaComboBoxFornecedor();
+        atualizarTabelaBebida("");
     }
 
     /**
@@ -256,7 +256,7 @@ public class AdminPanel extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Nota Fiscal", "Nome do cliente", "Sabores de pizza", "Tamanho", "Bebidas", "Borda", "Data da venda", "Valor total"
+                "Pedido", "Nome do cliente", "Sabores de pizza", "Tamanho", "Bebidas", "Borda", "Data da venda", "Valor total"
             }
         ));
         tabelaVenda.setRowHeight(25);
@@ -1421,7 +1421,6 @@ public class AdminPanel extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDespesasLayout.createSequentialGroup()
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel13)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(dataDeVencInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1537,67 +1536,65 @@ public class AdminPanel extends javax.swing.JFrame {
 
     private void tabelaPizzaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaPizzaMouseClicked
         int linha = tabelaPizza.getSelectedRow();
-        if(indexUltimaLinhaSelecionada != linha)
-        {
+        if (indexUltimaLinhaSelecionada != linha) {
             Pizza pizzaSelecionado = listaDePizzas.get(linha);
             exibeIngredientes.setText(pizzaSelecionado.getIngredientes());
             indexUltimaLinhaSelecionada = linha;
         }
-        
+
     }//GEN-LAST:event_tabelaPizzaMouseClicked
 
     private void cadastrarPizzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarPizzaActionPerformed
-        try{
-            Pizza pizza = new Pizza(inserirNomePizza.getText(),inserirIngredientesPizza.getText(),(String) selecionaTipoPizza.getSelectedItem());
+        try {
+            Pizza pizza = new Pizza(inserirNomePizza.getText(), inserirIngredientesPizza.getText(), (String) selecionaTipoPizza.getSelectedItem());
             pizzaDAO.inserirPizza(pizza);
-            atualizarTabelaPizza("","");
+            atualizarTabelaPizza("", "");
             inserirNomePizza.setText("");
             inserirIngredientesPizza.setText("");
             selecionaTipoPizza.setSelectedIndex(0);
             JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_cadastrarPizzaActionPerformed
 
     private void editarPizzaSelecionadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarPizzaSelecionadaActionPerformed
         int linha = tabelaPizza.getSelectedRow();
-        if(linha<0){
-            JOptionPane.showMessageDialog(null, "Selecione um sabor para editar","Atenção", JOptionPane.WARNING_MESSAGE);
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um sabor para editar", "Atenção", JOptionPane.WARNING_MESSAGE);
             return;
         }
         Pizza pizzaSelecionado = listaDePizzas.get(linha);
-        try{
+        try {
             TableModel model = tabelaPizza.getModel();
-            pizzaSelecionado.setNome((String)model.getValueAt(linha,0));
+            pizzaSelecionado.setNome((String) model.getValueAt(linha, 0));
             pizzaSelecionado.setIngredientes(exibeIngredientes.getText());
-            System.out.print((String)model.getValueAt(linha,1));
-            if(tiposDePizza.contains((String)model.getValueAt(linha,1))){
-                pizzaSelecionado.setTipo((String)model.getValueAt(linha,1));
+            if (tiposDePizza.contains((String) model.getValueAt(linha, 1))) {
+                pizzaSelecionado.setTipo((String) model.getValueAt(linha, 1));
                 pizzaDAO.editarPizza(pizzaSelecionado);
-                atualizarTabelaPizza("","");
+                atualizarTabelaPizza("", "");
                 JOptionPane.showMessageDialog(null, "Produto atualizado com sucesso!");
 
-            }else{
-                JOptionPane.showMessageDialog(null, "Selecione um tipo de pizza valido para atualizar","Atenção", JOptionPane.WARNING_MESSAGE);
-            }            
-        }catch (SQLException ex) {
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione um tipo de pizza valido para atualizar", "Atenção", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_editarPizzaSelecionadaActionPerformed
 
     private void removerPizzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerPizzaActionPerformed
         int linha = tabelaPizza.getSelectedRow();
-        if(linha<0){
-            JOptionPane.showMessageDialog(null, "Selecione um sabor para editar","Atenção", JOptionPane.WARNING_MESSAGE);
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um sabor para editar", "Atenção", JOptionPane.WARNING_MESSAGE);
             return;
         }
         Pizza pizzaSelecionado = listaDePizzas.get(linha);
-        try{
+        try {
             pizzaDAO.removerPizza(pizzaSelecionado.getId());
-            atualizarTabelaPizza("","");
-             JOptionPane.showMessageDialog(null, "Produto removido com sucesso!");
-        }catch (SQLException ex) {
+            atualizarTabelaPizza("", "");
+            JOptionPane.showMessageDialog(null, "Produto removido com sucesso!");
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_removerPizzaActionPerformed
@@ -1607,15 +1604,15 @@ public class AdminPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_inserirNomeFornecedorActionPerformed
 
     private void cadastrarFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarFornecedorActionPerformed
-       try{
-            fornecedorDAO.inserirFornecedor(inserirNomeFornecedor.getText(),inserirTelefoneFornecedor.getText());
-            atualizarTabelaFornecedor(null,null);
+        try {
+            fornecedorDAO.inserirFornecedor(inserirNomeFornecedor.getText(), inserirTelefoneFornecedor.getText());
+            atualizarTabelaFornecedor(null, null);
             inserirNomePizza.setText("");
             inserirIngredientesPizza.setText("");
             selecionaTipoPizza.setSelectedIndex(0);
             atualizaComboBoxFornecedor();
             JOptionPane.showMessageDialog(null, "Fornecedor cadastrado com sucesso!");
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_cadastrarFornecedorActionPerformed
@@ -1626,16 +1623,16 @@ public class AdminPanel extends javax.swing.JFrame {
 
     private void removerFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerFornecedorActionPerformed
         int linha = tabelaFornecedor.getSelectedRow();
-        if(linha<0){
-            JOptionPane.showMessageDialog(null, "Selecione um fornecedor para remover","Atenção", JOptionPane.WARNING_MESSAGE);
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um fornecedor para remover", "Atenção", JOptionPane.WARNING_MESSAGE);
             return;
         }
         Fornecedor fornecedorSelecionado = listaDeFornecedores.get(linha);
-        try{
+        try {
             fornecedorDAO.removerFornecedor(fornecedorSelecionado.getId());
-            atualizarTabelaFornecedor("","");
+            atualizarTabelaFornecedor("", "");
             JOptionPane.showMessageDialog(null, "Fornecedor removido com sucesso!");
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_removerFornecedorActionPerformed
@@ -1646,16 +1643,15 @@ public class AdminPanel extends javax.swing.JFrame {
 
     private void filtraVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtraVendaActionPerformed
         Date auxDataDeVendaInicio = null;
-        Date auxDataDeVendaFim = null;  
+        Date auxDataDeVendaFim = null;
 
-        if(dataVendaInicio.getDate() != null){
+        if (dataVendaInicio.getDate() != null) {
             auxDataDeVendaInicio = new java.sql.Date(dataVendaInicio.getDate().getTime());
         }
-        if(dataVendaFim.getDate() != null){
+        if (dataVendaFim.getDate() != null) {
             auxDataDeVendaFim = new java.sql.Date(dataVendaFim.getDate().getTime());
-;
         }
-        atualizarTabelaVenda(notaNomeCliente.getText(), notaNomeDaPizza.getText(),auxDataDeVendaInicio,auxDataDeVendaFim);
+        atualizarTabelaVenda(notaNomeCliente.getText(), notaNomeDaPizza.getText(), auxDataDeVendaInicio, auxDataDeVendaFim);
     }//GEN-LAST:event_filtraVendaActionPerformed
 
     private void cadastroDescricaoDespesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroDescricaoDespesaActionPerformed
@@ -1686,7 +1682,7 @@ public class AdminPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_filtroNomePizzaProdutoActionPerformed
 
     private void filtrarPizzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarPizzaActionPerformed
-        atualizarTabelaPizza(filtroNomePizzaProduto.getText(),filtroSelecionaTipoPizza.getSelectedItem().toString());
+        atualizarTabelaPizza(filtroNomePizzaProduto.getText(), filtroSelecionaTipoPizza.getSelectedItem().toString());
     }//GEN-LAST:event_filtrarPizzaActionPerformed
 
     private void filtroNomeFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtroNomeFornecedorActionPerformed
@@ -1694,7 +1690,7 @@ public class AdminPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_filtroNomeFornecedorActionPerformed
 
     private void filtraFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtraFornecedorActionPerformed
-        atualizarTabelaFornecedor(filtroNomeFornecedor.getText(),filtroTelefoneFornecedor.getText());
+        atualizarTabelaFornecedor(filtroNomeFornecedor.getText(), filtroTelefoneFornecedor.getText());
     }//GEN-LAST:event_filtraFornecedorActionPerformed
 
     private void filtroTelefoneFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtroTelefoneFornecedorActionPerformed
@@ -1703,40 +1699,39 @@ public class AdminPanel extends javax.swing.JFrame {
 
     private void filtrarDespesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarDespesaActionPerformed
         Date auxDataDePagtoInicio = null;
-        Date auxDataDePagtoFim = null;  
-        Date auxDataDeVencInicio = null;  
-        Date auxDataDeVencFim = null;  
-        
+        Date auxDataDePagtoFim = null;
+        Date auxDataDeVencInicio = null;
+        Date auxDataDeVencFim = null;
 
-        if(dataDePagtoInicio.getDate() != null){
+        if (dataDePagtoInicio.getDate() != null) {
             auxDataDePagtoInicio = new java.sql.Date(dataDePagtoInicio.getDate().getTime());
         }
-        if(dataDePagtoFim.getDate() != null){
+        if (dataDePagtoFim.getDate() != null) {
             auxDataDePagtoFim = new java.sql.Date(dataDePagtoFim.getDate().getTime());
-;
+            ;
         }
-        if(dataDeVencInicio.getDate() != null){
+        if (dataDeVencInicio.getDate() != null) {
             auxDataDeVencInicio = new java.sql.Date(dataDeVencInicio.getDate().getTime());
         }
-        if(dataDeVencFim.getDate() != null){
-            auxDataDeVencFim =  new java.sql.Date(dataDeVencFim.getDate().getTime());
+        if (dataDeVencFim.getDate() != null) {
+            auxDataDeVencFim = new java.sql.Date(dataDeVencFim.getDate().getTime());
         }
         atualizarTabelaDespesas(
-            auxDataDePagtoInicio,
-            auxDataDePagtoFim,
-            auxDataDeVencInicio,
-            auxDataDeVencFim,
-            filtroNomeFornecedorDespesa.getText(),
-            valorInicio.getText().trim(),
-            valorFim.getText().trim()
+                auxDataDePagtoInicio,
+                auxDataDePagtoFim,
+                auxDataDeVencInicio,
+                auxDataDeVencFim,
+                filtroNomeFornecedorDespesa.getText(),
+                valorInicio.getText().trim(),
+                valorFim.getText().trim()
         );
     }//GEN-LAST:event_filtrarDespesaActionPerformed
 
     private void cadatrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadatrarClienteActionPerformed
         String nomeCliente = cadastroNomeCliente.getText();
         String telefoneCliente = cadastroTelefoneCliente.getText();
-        Date auxCadastoDataDeNascimentoCliente = null;  
-        if(cadastoDataDeNascimentoCliente.getDate() != null){
+        Date auxCadastoDataDeNascimentoCliente = null;
+        if (cadastoDataDeNascimentoCliente.getDate() != null) {
             try {
                 auxCadastoDataDeNascimentoCliente = new java.sql.Date(cadastoDataDeNascimentoCliente.getDate().getTime());
                 clienteDAO.inserirCliente(nomeCliente, telefoneCliente, auxCadastoDataDeNascimentoCliente);
@@ -1744,12 +1739,12 @@ public class AdminPanel extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Houve um problema ao cadastrar", "Alerta", JOptionPane.WARNING_MESSAGE);
             }
         }
-        
-       
+
+
     }//GEN-LAST:event_cadatrarClienteActionPerformed
 
     private void filtrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarClienteActionPerformed
-        atualizarTabelaClientes(filtroNomeCliente.getText(),filtroTelefoneCliente.getText());
+        atualizarTabelaClientes(filtroNomeCliente.getText(), filtroTelefoneCliente.getText());
     }//GEN-LAST:event_filtrarClienteActionPerformed
 
     private void editarClienteCadastradoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarClienteCadastradoActionPerformed
@@ -1765,7 +1760,7 @@ public class AdminPanel extends javax.swing.JFrame {
             clienteSelecionado.setTelefone((String) model.getValueAt(linha, 1));
             String formatoEntrada = "dd/MM/yyyy";
             SimpleDateFormat sdfEntrada = new SimpleDateFormat(formatoEntrada);
-            Date data = (Date) sdfEntrada.parse((String) model.getValueAt(linha,2));
+            Date data = (Date) sdfEntrada.parse((String) model.getValueAt(linha, 2));
             clienteSelecionado.setDataDeNascimento(data);
             clienteDAO.editarCliente(clienteSelecionado);
             atualizarTabelaClientes("", "");
@@ -1778,11 +1773,11 @@ public class AdminPanel extends javax.swing.JFrame {
     private void excluirClienteCadastradoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excluirClienteCadastradoActionPerformed
         int linha = tabelaCliente.getSelectedRow();
         Cliente clienteSelecionado = listaClientes.get(linha);
-        try{
+        try {
             clienteDAO.removerCliente(clienteSelecionado.getId());
-            atualizarTabelaClientes("","");
-             JOptionPane.showMessageDialog(null, "Cliente removido com sucesso!");
-        }catch (SQLException ex) {
+            atualizarTabelaClientes("", "");
+            JOptionPane.showMessageDialog(null, "Cliente removido com sucesso!");
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_excluirClienteCadastradoActionPerformed
@@ -1792,8 +1787,8 @@ public class AdminPanel extends javax.swing.JFrame {
         String valorGasto = cadastroValorGastoDespesa.getText();
         Fornecedor fornecedor = listaDeFornecedores.get(fornecedorComboBox.getSelectedIndex());
         int idFornecedor = fornecedor.getId();
-        Date auxCadastoDataDeVencDespesa = null;  
-        if(cadastroDataDeVenc.getDate() != null){
+        Date auxCadastoDataDeVencDespesa = null;
+        if (cadastroDataDeVenc.getDate() != null) {
             auxCadastoDataDeVencDespesa = new java.sql.Date(dataDePagtoInicio.getDate().getTime());
             despesaDAO.inserirDespesa(idFornecedor, descricao, valorGasto, auxCadastoDataDeVencDespesa);
         }
@@ -1809,6 +1804,8 @@ public class AdminPanel extends javax.swing.JFrame {
         Bebida bebida = new Bebida(nome, new BigDecimal(preco));
         try {
             bebidaDAO.adicionarBebida(bebida);
+            atualizarTabelaBebida("");
+            JOptionPane.showMessageDialog(null, "Bebida cadastrada com sucesso!");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Houve um problema ao cadastrar", "Alerta", JOptionPane.WARNING_MESSAGE);
         }
@@ -1847,7 +1844,7 @@ public class AdminPanel extends javax.swing.JFrame {
         try {
             bebidaDAO.removerBebida(bebidaSelecionado.getId());
         } catch (SQLException ex) {
-                        JOptionPane.showMessageDialog(null, "Houve um problema ao remover", "Alerta", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Houve um problema ao remover", "Alerta", JOptionPane.WARNING_MESSAGE);
 
         }
     }//GEN-LAST:event_removerPizza1ActionPerformed
@@ -1857,7 +1854,7 @@ public class AdminPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_filtroNomeBebidaActionPerformed
 
     private void filtrarPizza1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarPizza1ActionPerformed
-       atualizarTabelaBebida(filtroNomeBebida.getText());
+        atualizarTabelaBebida(filtroNomeBebida.getText());
     }//GEN-LAST:event_filtrarPizza1ActionPerformed
 
     private void precoBebidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_precoBebidaActionPerformed
@@ -1867,8 +1864,8 @@ public class AdminPanel extends javax.swing.JFrame {
     private void notaNomeDaPizzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notaNomeDaPizzaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_notaNomeDaPizzaActionPerformed
-    private LocalDate retornaStringEmLocalDate(String textoData){
-        
+    private LocalDate retornaStringEmLocalDate(String textoData) {
+
         return LocalDate.parse(textoData, formatter);
     }
 
@@ -1877,7 +1874,7 @@ public class AdminPanel extends javax.swing.JFrame {
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(i).setCellRenderer(linhaRenderer);
     }
-    
+
     private void corColunasTabela(JTable table, int i) {
         LinhaRenderer linhaRenderer = new LinhaRenderer();
         TableColumnModel columnModel = table.getColumnModel();
@@ -1885,6 +1882,7 @@ public class AdminPanel extends javax.swing.JFrame {
     }
 
     public class LinhaRenderer extends DefaultTableCellRenderer {
+
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -1899,14 +1897,16 @@ public class AdminPanel extends javax.swing.JFrame {
                 } else {
                     component.setBackground(Color.GRAY);
                     component.setForeground(Color.WHITE);
-                     // Cor do texto padrão
+                    // Cor do texto padrão
                 }
             }
 
             return component;
         }
     }
+
     public class LinhaRendererCenter extends DefaultTableCellRenderer {
+
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -1922,18 +1922,19 @@ public class AdminPanel extends javax.swing.JFrame {
                 } else {
                     component.setBackground(Color.GRAY);
                     component.setForeground(Color.WHITE);
-                     // Cor do texto padrão
+                    // Cor do texto padrão
                 }
             }
 
             return component;
         }
     }
-    private void atualizaComboBoxFornecedor(){
+
+    private void atualizaComboBoxFornecedor() {
         List<Fornecedor> fornecedores;
         try {
-            fornecedores = fornecedorDAO.buscarListaDeFornecedores("","");
-            for(Fornecedor fornecedor:fornecedores){
+            fornecedores = fornecedorDAO.buscarListaDeFornecedores("", "");
+            for (Fornecedor fornecedor : fornecedores) {
                 String nomeFornecedor = fornecedor.getNome();
                 fornecedorComboBox.addItem(nomeFornecedor);
             }
@@ -1941,50 +1942,60 @@ public class AdminPanel extends javax.swing.JFrame {
             Logger.getLogger(AdminPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     private void atualizarTabelaVenda(String nomeCliente, String nomePizza, java.sql.Date dataDeVendaInicio, java.sql.Date dataDeVendaFim) {
         try {
-            listaNotasFiscais = pedidoDAO.getAllNotasFiscais();
+            int i = 0, j = 0;
+            listaNotasFiscais = pedidoDAO.retornaTodosPedidos(nomeCliente, nomePizza, dataDeVendaInicio, dataDeVendaFim);
             DefaultTableModel model = (DefaultTableModel) tabelaVenda.getModel();
             model.setNumRows(0);
             for (NotaFiscal nf : listaNotasFiscais) {
-                int idCliente = nf.getIdCliente();
+                int idCliente = nf.getIdCliente(); 
                 Cliente cliente = clienteDAO.buscaClientePorId(idCliente);
+                System.out.println(nf.getListaPedidos().size());
                 if (cliente != null) {
                     String nome = cliente.getNome();
-
+                    
                     for (Pedido pedido : nf.getListaPedidos()) {
+                        
                         String tamanho = "";
                         String sabores = "";
                         String borda = "";
                         String bebidas = "";
-
+                        
+                        i++;
                         if (pedido.getSabores() != null) {
                             tamanho = pedido.getTamanho();
                             sabores = pedido.concatenaPizzas();
+                            
                             borda = pedido.getBorda();
-                        }
+                            model.addRow(new Object[]{pedido.getNotaFiscalId(), nome, sabores, tamanho, bebidas, borda, "", pedido.getValorTotal()});
 
-                        if (pedido.getBebidas() != null) {
-                            bebidas = pedido.concatenarBebidas();
                         }
-                        BigDecimal valorTotal = pedido.getValorTotal();
-                        model.addRow(new Object[]{pedido.getNotaFiscalId(), nome, sabores, tamanho, bebidas, borda, "", pedido.getValorTotal()});
+                        
+                        if (pedido.getBebidas() != null) {
+                           
+                            bebidas = pedido.concatenarBebidas();
+                             
+                            model.addRow(new Object[]{pedido.getNotaFiscalId(), nome, sabores, tamanho, bebidas, borda, "", pedido.getValorTotal()});                     
+                        }
                     }
                 }
             }
-
-            corColunasTabelaCenter(tabelaVenda,0);
-            corColunasTabela(tabelaVenda,1);
-            corColunasTabela(tabelaVenda,2);
-            corColunasTabelaCenter(tabelaVenda,3);
-            corColunasTabelaCenter(tabelaVenda,4);
-            corColunasTabelaCenter(tabelaVenda,5);
-            corColunasTabelaCenter(tabelaVenda,6);
-            corColunasTabelaCenter(tabelaVenda,7);
+            System.out.println("i:" +i +" j:"+ j);
+            corColunasTabelaCenter(tabelaVenda, 0);
+            corColunasTabela(tabelaVenda, 1);
+            corColunasTabela(tabelaVenda, 2);
+            corColunasTabelaCenter(tabelaVenda, 3);
+            corColunasTabelaCenter(tabelaVenda, 4);
+            corColunasTabelaCenter(tabelaVenda, 5);
+            corColunasTabelaCenter(tabelaVenda, 6);
+            corColunasTabelaCenter(tabelaVenda, 7);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
+    
     private void atualizarTabelaClientes(String nomeCliente, String telefoneCliente) {
         try {
             listaClientes = clienteDAO.buscaListaClientes(nomeCliente, telefoneCliente);
@@ -1996,7 +2007,7 @@ public class AdminPanel extends javax.swing.JFrame {
                 String telefone = cliente.getTelefone();
                 Date dataDeNascimento = cliente.getDataDeNascimento();
 
-                model.addRow(new Object[]{nomeCliente, telefone, dataDeNascimento});            
+                model.addRow(new Object[]{nomeCliente, telefone, dataDeNascimento});
             }
             corColunasTabela(tabelaCliente, 0);
             corColunasTabela(tabelaCliente, 1);
@@ -2006,9 +2017,11 @@ public class AdminPanel extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
+
     private void atualizarTabelaPizza(String nomePizza, String tipoPizza) {
         try {
-            listaDePizzas = pizzaDAO.buscarListaDePizzas(nomePizza, tipoPizza);
+            listaDePizzas = pizzaDAO.retornaListaDePizzas(nomePizza, tipoPizza);
+            System.out.println("listadepizzas: "+listaDePizzas);
             DefaultTableModel model = (DefaultTableModel) tabelaPizza.getModel();
             model.setNumRows(0);
             for (int i = 0; i < listaDePizzas.size(); i++) {
@@ -2018,15 +2031,16 @@ public class AdminPanel extends javax.swing.JFrame {
 
                 model.addRow(new Object[]{nome, tipo});
             }
-            corColunasTabela(tabelaPizza,0);
-            corColunasTabelaCenter(tabelaPizza,1);
+            corColunasTabela(tabelaPizza, 0);
+            corColunasTabelaCenter(tabelaPizza, 1);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
+
     private void atualizarTabelaFornecedor(String nome, String telefone) {
         try {
-            listaDeFornecedores = fornecedorDAO.buscarListaDeFornecedores(nome,telefone);
+            listaDeFornecedores = fornecedorDAO.buscarListaDeFornecedores(nome, telefone);
             DefaultTableModel model = (DefaultTableModel) tabelaFornecedor.getModel();
             model.setNumRows(0);
             for (int i = 0; i < listaDeFornecedores.size(); i++) {
@@ -2036,14 +2050,15 @@ public class AdminPanel extends javax.swing.JFrame {
 
                 model.addRow(new Object[]{nomeFornecedor, telefoneFornecedor});
             }
-            corColunasTabela(tabelaFornecedor,0);
-            corColunasTabelaCenter(tabelaFornecedor,1);
+            corColunasTabela(tabelaFornecedor, 0);
+            corColunasTabelaCenter(tabelaFornecedor, 1);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
+
     private void atualizarTabelaDespesas(
-            java.sql.Date dataPagtoInicio, 
+            java.sql.Date dataPagtoInicio,
             java.sql.Date dataPagtoFim,
             java.sql.Date dataVencInicio,
             java.sql.Date dataVencFim,
@@ -2052,7 +2067,6 @@ public class AdminPanel extends javax.swing.JFrame {
             String valorMax) {
         try {
             listaDeDespesas = despesaDAO.buscarListaDeDespesas(dataPagtoInicio, dataPagtoFim, dataVencInicio, dataVencFim, filtroNomeFornecedor, valorMin, valorMax);
-            System.out.println(listaDeDespesas.size());
             DefaultTableModel model = (DefaultTableModel) tabelaDespesas.getModel();
             model.setNumRows(0);
             for (int i = 0; i < listaDeDespesas.size(); i++) {
@@ -2064,35 +2078,36 @@ public class AdminPanel extends javax.swing.JFrame {
                 LocalDate dataVenc = despesa.getDataDeVenc();
                 LocalDate dataPagto = despesa.getDataDePagto();
 
-                model.addRow(new Object[]{descricaoDespesa,nomeFornecedor, valorDespesa, dataVenc, dataPagto});
+                model.addRow(new Object[]{descricaoDespesa, nomeFornecedor, valorDespesa, dataVenc, dataPagto});
             }
-            corColunasTabela(tabelaDespesas,0);
-            corColunasTabela(tabelaDespesas,1);
-            corColunasTabelaCenter(tabelaDespesas,2);
-            corColunasTabelaCenter(tabelaDespesas,3);
-            corColunasTabelaCenter(tabelaDespesas,4);
+            corColunasTabela(tabelaDespesas, 0);
+            corColunasTabela(tabelaDespesas, 1);
+            corColunasTabelaCenter(tabelaDespesas, 2);
+            corColunasTabelaCenter(tabelaDespesas, 3);
+            corColunasTabelaCenter(tabelaDespesas, 4);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
+
     /**
      * @param args the command line arguments
      */
     private void atualizarTabelaBebida(String nomeBebida) {
         try {
-            listaDeBebidas = bebidaDAO.buscarBebida(nomeBebida);
+            listaDeBebidas = bebidaDAO.retornaListaBebidaPeloNome(nomeBebida);
             DefaultTableModel model = (DefaultTableModel) tabelaBebida.getModel();
             model.setNumRows(0);
-            if(listaDeBebidas != null){
-               for (int i = 0; i < listaDeBebidas.size(); i++) {
+            if (listaDeBebidas != null) {
+                for (int i = 0; i < listaDeBebidas.size(); i++) {
                     Bebida bebida = listaDeBebidas.get(i);
                     String nome = bebida.getNome();
                     BigDecimal preco = bebida.getPreco();
 
-                    model.addRow(new Object[]{nome, preco});            
-                } 
+                    model.addRow(new Object[]{nome, preco});
+                }
             }
-            
+
             corColunasTabela(tabelaBebida, 0);
             corColunasTabelaCenter(tabelaBebida, 1);
 
